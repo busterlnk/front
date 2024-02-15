@@ -12,7 +12,7 @@ export const login = async (formData) => {
             }
         );
 
-        localStorage.setItem("token", response.data.token);
+        localStorage.setItem("jwt", response.data.token);
         return response.data.token;
     } catch (error) {
         console.log(error.response);
@@ -29,7 +29,7 @@ export const fetchUser = async (authToken) => {
             {
                 headers: {
                     'Content-Type': 'application/json',
-                    Authorization: `Bearer ${localStorage.getItem('token')}`
+                    Authorization: `Bearer ${localStorage.getItem('jwt')}`
                 },
             }
         );

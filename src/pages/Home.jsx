@@ -1,62 +1,64 @@
-import React, {useState} from 'react';
-import {Button} from 'react-bootstrap'
-import {Helmet} from 'react-helmet'
-import axios from "axios";
-import {fetchUser, login} from '../api/request/agentRequest';
-import {useAuth} from "../context/AuthContext";
+import React, {useEffect, useState} from 'react';
+import { Container, Row, Col, ListGroup, Card } from 'react-bootstrap';
+import {getSports} from "../api/request/sportRequest";
+import {Link} from "react-router-dom";
 
-import '../styles/login.css';
-import {useNavigate} from "react-router-dom";
+const Home = () => {
 
-const Login = () => {
-    const [username, setUsername] = useState('');
-    const [password, setPassword] = useState('');
+    const [sports, setSports] = useState([])
 
-    const { setLogin } = useAuth();
+    useEffect(() => {
+        const fetchData = async () => {
+            const response = await getSports();
+            setSports(response);
+        };
 
-    const navigate = useNavigate();
+        // Llamamos a fetchData() cuando haya cambios en formData
+        fetchData();
+    }, []);
 
-    const handleChange = (e) => {
-        if(e.target.name === 'username'){
-            setUsername(e.target.value);
-        } else if(e.target.name === 'password'){
-            setPassword(e.target.value);
-        }
-    }
-    const handleSubmit = async(e) => {
-        e.preventDefault();
-        const formData = {username: username, password:password};
-
-        login(formData).then(
-            (response) => {
-                setLogin(response)
-                console.log(response)
-                fetchUser(response).then((user) => {
-                    if(user){
-                        navigate('/home');
-                    }
-                })
-            }
-        )
-
-        // try{
-        //     const response = await axios.post('https://127.0.0.1:8000/api/login',
-        //     {username: username, password: password});
-        //     console.log(response);
-        // }catch(error){
-        //
-        // }
-    }
 
     return (
-        <>
-            <Helmet>
-                <title>Home</title>
-            </Helmet>
-            <div className="home">
-            </div>
-        </>
+        <Container>
+            <Row className="mt-3">
+                <Col md={4}>
+                    <Card>
+                        <Card.Header>Deportes</Card.Header>
+                        <ListGroup variant="flush">
+                            {sports && sports.map((sport) => (
+                                <Link key={sport.id} to={'/sports/'+sport.id} className='nav-link'>
+                                    <ListGroup.Item >{sport.name}</ListGroup.Item>
+                                </Link>
+                            ))}
+                            {/* Agrega más deportes aquí */}
+                        </ListGroup>
+                    </Card>
+                </Col>
+                <Col md={8}>
+                    <Row>
+                        <Col md={12}>
+                            <Card>
+                                <Card.Header>Último Partido</Card.Header>
+                                <Card.Body>
+                                    {/* Contenido del último partido */}
+                                </Card.Body>
+                            </Card>
+                        </Col>
+                    </Row>
+                    <Row className="mt-3">
+                        <Col md={12}>
+                            <Card>
+                                <Card.Header>Estadísticas</Card.Header>
+                                <Card.Body>
+                                    {/* Contenido de estadísticas */}
+                                </Card.Body>
+                            </Card>
+                        </Col>
+                    </Row>
+                </Col>
+            </Row>
+        </Container>
     );
-}
+};
 
-export default Login;
+export default Home;
