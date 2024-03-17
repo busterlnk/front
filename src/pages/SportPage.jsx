@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {Container, Row, Col, ListGroup, Card, Button} from 'react-bootstrap';
-import {createNewGame, getGamesByUser, getSports} from "../api/request/sportRequest";
+import {createNewGame, getGamesByUser, getSportById} from "../api/request/sportRequest";
 import {Link, useNavigate, useParams} from "react-router-dom";
 
 const SportPage = () => {
@@ -9,12 +9,19 @@ const SportPage = () => {
     const { id } = useParams();
     const userData = JSON.parse(localStorage.getItem('userData'));
     const [games, setGames] = useState([])
+    const [sport, setSport] = useState()
 
     useEffect(() => {
         const fetchData = async () => {
-            const response = await getGamesByUser(userData.id, id);
-            if(response.status == 200){
-                setGames(response);
+            await getSportById(id).then((responseSport) => {
+                console.log(responseSport.name);
+                setSport(responseSport);
+            })
+
+            const responseGames = await getGamesByUser(userData.id, id);
+            console.log(responseGames);
+            if(responseGames.status == 200){
+                setGames(responseGames.data);
             }
         };
 
@@ -35,7 +42,7 @@ const SportPage = () => {
     return (
         <Container>
             <div>
-                <h1>ID del deporte: {id}</h1>
+                <h1>{sport ? (sport.name) : ""}</h1>
                 {/* Renderiza la información del deporte usando el id */}
                 <Button onClick={handleNewGame}>Nuevo Partido</Button>
             </div>
@@ -43,11 +50,11 @@ const SportPage = () => {
                 <Row className="mt-3">
                     <Col md={4}>
                         <Card>
-                            <Card.Header>Deportes</Card.Header>
+                            <Card.Header>Partidos</Card.Header>
                             <ListGroup variant="flush">
                                 {games && games.map((game) => (
-                                    <Link key={game.id} to={'/game/'+game.id} className='nav-link'>
-                                        <ListGroup.Item >{game.name}</ListGroup.Item>
+                                    <Link key={game.id} to={'/sport/'+game.sport_id+'/game/'+game.game_id} className='nav-link'>
+                                        <ListGroup.Item >{game.created_at}</ListGroup.Item>
                                     </Link>
                                 ))}
                                 {/* Agrega más deportes aquí */}

@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-export const getSports = async (formData) => {
+export const getSports = async () => {
     try {
         const response = await axios.get(
             'https://127.0.0.1:8000/api/sports',
@@ -12,8 +12,24 @@ export const getSports = async (formData) => {
             }
         );
 
-        localStorage.setItem("token", response.data.token);
         return response.data['hydra:member'];
+    } catch (error) {
+        console.log(error.response);
+    }
+}
+
+export const getSportById = async (id) => {
+    try {
+        const response = await axios.get(
+            'https://127.0.0.1:8000/api/sports/'+id,
+            {
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${localStorage.getItem('jwt')}`
+                },
+            }
+        );
+        return response.data;
     } catch (error) {
         console.log(error.response);
     }
