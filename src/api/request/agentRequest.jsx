@@ -33,9 +33,9 @@ export const fetchUser = async (authToken) => {
                 },
             }
         );
-        console.log(response)
+        // console.log(JSON.stringify(response.data))
         // const userIri = response.headers.get('Location');
-
+        localStorage.setItem('userData', JSON.stringify(response.data))
         return response.data;
     } catch (error) {
         console.log(error.response.data);
