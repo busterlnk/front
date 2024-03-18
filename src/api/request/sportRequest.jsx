@@ -61,12 +61,8 @@ export const getGamesByUser = async(userid, sportid) => {
 
 }
 
-export const createNewGame = async(sportid, userid) => {
+export const createNewGame = async(formData) => {
     try {
-        const formData = new FormData();
-
-        formData.append('userid', userid)
-        formData.append('sportid', sportid);
 
         const response = await axios.post(
             'https://127.0.0.1:8000/api/create_game',

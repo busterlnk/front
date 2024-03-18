@@ -1,15 +1,16 @@
 import React, {useEffect, useState} from 'react';
 import {Container, Row, Col, ListGroup, Card, Button} from 'react-bootstrap';
-import {createNewGame, getGamesByUser, getSportById} from "../api/request/sportRequest";
-import {Link, useNavigate, useParams} from "react-router-dom";
+import {getGamesByUser, getSportById} from "../api/request/sportRequest";
+import {Link, useParams} from "react-router-dom";
+import ModalNewGame from "../components/ModalNewGame";
 
 const SportPage = () => {
 
-    const navigate = useNavigate();
     const { id } = useParams();
     const userData = JSON.parse(localStorage.getItem('userData'));
     const [games, setGames] = useState([])
-    const [sport, setSport] = useState()
+    const [sport, setSport] = useState();
+    const [showModal, setShowModal] = useState(false);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -25,17 +26,15 @@ const SportPage = () => {
             }
         };
 
-        // Llamamos a fetchData() cuando haya cambios en formData
         fetchData();
     }, []);
 
-    const handleNewGame = async() => {
-        // console.log(id, userData.id);
-        await createNewGame(id, userData.id).then((response) => {
-            if (response.status == 200){
-                navigate('/sport/'+id+'/game/'+response.data.id);
-            }
-        })
+    const handleOpenModal = () => {
+        setShowModal(true);
+    }
+
+    const handleCloseModal = () => {
+        setShowModal(false);
     }
 
 
@@ -43,25 +42,30 @@ const SportPage = () => {
         <Container>
             <div>
                 <h1>{sport ? (sport.name) : ""}</h1>
-                {/* Renderiza la información del deporte usando el id */}
-                <Button onClick={handleNewGame}>Nuevo Partido</Button>
+                <Button onClick={handleOpenModal}>Nuevo Partido</Button>
+                <ModalNewGame
+                    showModal={showModal}
+                    handleCloseModal={handleCloseModal}
+                    id={id}
+                    userData={userData}
+                />
             </div>
             <Container>
                 <Row className="mt-3">
-                    <Col md={4}>
+                    <Col md={6}>
                         <Card>
                             <Card.Header>Partidos</Card.Header>
                             <ListGroup variant="flush">
                                 {games && games.map((game) => (
-                                    <Link key={game.id} to={'/sport/'+game.sport_id+'/game/'+game.game_id} className='nav-link'>
-                                        <ListGroup.Item >{game.created_at}</ListGroup.Item>
+                                    <Link key={game.id} to={'/sport/' + game.sport_id + '/game/' + game.game_id} className='nav-link'>
+                                        <ListGroup.Item >{game.player_one+' / '+game.player_two+' ('+game.created_at+')'}</ListGroup.Item>
                                     </Link>
                                 ))}
                                 {/* Agrega más deportes aquí */}
                             </ListGroup>
                         </Card>
                     </Col>
-                    <Col md={8}>
+                    <Col md={6}>
                         <Row>
                             <Col md={12}>
                                 <Card>
