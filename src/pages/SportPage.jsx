@@ -57,7 +57,7 @@ const SportPage = () => {
                             <Card.Header>Partidos</Card.Header>
                             <ListGroup variant="flush">
                                 {games && games.map((game) => (
-                                    <Link key={game.id} to={'/sport/' + game.sport_id + '/game/' + game.game_id} className='nav-link'>
+                                    <Link key={game.id} to={'/sports/' + game.sport_id + '/game/' + game.game_id} className='nav-link'>
                                         <ListGroup.Item >{game.player_one+' / '+game.player_two+' ('+game.created_at+')'}</ListGroup.Item>
                                     </Link>
                                 ))}

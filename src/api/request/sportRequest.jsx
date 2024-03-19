@@ -81,3 +81,19 @@ export const createNewGame = async(formData) => {
         console.log(error.response);
     }
 }
+
+export const getGameScore = async(gameid) => {
+    try {
+        const response = await axios.get(
+            'https://127.0.0.1:8000/api/games/'+gameid,
+            {
+                headers: {
+                    'Content-Type': 'application/ld+json',
+                    Authorization: `Bearer ${localStorage.getItem('jwt')}`
+                },
+            });
+        return response;
+    }catch (e) {
+        console.error(e)
+    }
+}
