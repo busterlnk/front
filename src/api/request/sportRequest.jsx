@@ -61,11 +61,11 @@ export const getGamesByUser = async(userid, sportid) => {
 
 }
 
-export const createNewGame = async(formData) => {
+export const createNewPadelGame = async(formData) => {
     try {
 
         const response = await axios.post(
-            'https://127.0.0.1:8000/api/create_game',
+            'https://127.0.0.1:8000/api/padel/create_game',
             formData,
             {
                 headers: {
@@ -82,10 +82,33 @@ export const createNewGame = async(formData) => {
     }
 }
 
+
+export const createNewTenisGame = async(formData) => {
+    try {
+
+        console.log('ss');
+        // const response = await axios.post(
+        //     'https://127.0.0.1:8000/api/padel/create_game',
+        //     formData,
+        //     {
+        //         headers: {
+        //             'Content-Type': 'application/ld+json',
+        //             Authorization: `Bearer ${localStorage.getItem('jwt')}`
+        //         },
+        //     }
+        // );
+        //
+        // console.log(response)
+        // return response;
+    } catch (error) {
+        console.log(error.response);
+    }
+}
+
 export const getGameScore = async(gameid) => {
     try {
         const response = await axios.get(
-            'https://127.0.0.1:8000/api/games/'+gameid,
+            'https://127.0.0.1:8000/api/padel_games/'+gameid,
             {
                 headers: {
                     'Content-Type': 'application/ld+json',

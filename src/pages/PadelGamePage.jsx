@@ -1,12 +1,11 @@
 import React, {useEffect, useState} from 'react';
-import {Container, Row, Col, ListGroup, Card, Button} from 'react-bootstrap';
-import {getGamesByUser, getGameScore, getSports} from "../api/request/sportRequest";
-import {Link, useParams} from "react-router-dom";
-
+import {Container, Row, Col, Card, Button} from 'react-bootstrap';
+import {getGameScore} from "../api/request/sportRequest";
+import {useParams} from "react-router-dom";
 import '../styles/game.css';
-import {resetGame, sendGameScore} from "../api/request/scoreRequest";
+import {resetPadelGame, sendPadelGameScore, sendPadelGameWinner} from "../api/request/scoreRequest";
 
-const GamePage = () => {
+const PadelGamePage = () => {
 
     const { gameid } = useParams();
     const [score, setScore] = useState([])
@@ -17,7 +16,7 @@ const GamePage = () => {
 
     const fetchData = async () => {
         await getGameScore(gameid).then((response)=>{
-            if(response.status == 200){
+            if(response.status === 200){
                 console.log(response.data);
                 setScore(response.data);
             }
@@ -29,28 +28,21 @@ const GamePage = () => {
         let newGame = {...score};
         newGame[player] = e.target.value
         setScore(newGame);
-        await sendGameScore(gameid,newGame);
+        await sendPadelGameScore(gameid,newGame);
     }
 
     const handleServe = async(player) => {
         let newGame = {...score};
         newGame['saque'] = player;
         setScore(newGame);
-        await sendGameScore(gameid, newGame);
+        await sendPadelGameScore(gameid, newGame);
     }
 
     const handleGame = async (player, action) => {
         let newGame = {...score};
-        const otherPlayer = player == 1 ? 2: 1;
-        let currentSet = 0
+        const otherPlayer = player === 1 ? 2: 1;
 
-        if((newGame.p11s !== 6 && newGame.p21s !== 6)){
-            currentSet = '1s';
-        }else if((newGame.p12s !== 6 && newGame.p22s !== 6)){
-            currentSet = '2s'
-        }else if((newGame.p13s !== 6 && newGame.p23s !== 6)){
-            currentSet = '3s';
-        }
+        const currentSet = checkSet(newGame);
 
         if (action === 'increase') {
             if(!newGame['p'+otherPlayer+currentSet]){
@@ -75,16 +67,23 @@ const GamePage = () => {
         }
 
         setScore(newGame);
-        await sendGameScore(gameid, newGame);
+        await sendPadelGameScore(gameid, newGame);
     };
 
-    const handlePoint = async (player, action) => {
-        let newGame = {...score};
-        const otherPlayer = player == 1 ? 2: 1;
-        const pointsSequence = [15, 30, 40];
-        const playerPoints = player === 1 ? 'p1ps' : 'p2ps';
-        let currentSet = 0
+    const sendWinner = async(game) => {
+        let firstCouple = 0;
+        // game['p2ps'] = null;
+        // game['p1ps'] = null;
+        firstCouple = game['p11s'] > game['p21s'] ? firstCouple+1 : firstCouple;
+        firstCouple = game['p12s'] > game['p22s'] ? firstCouple+1 : firstCouple;
+        firstCouple = game['p13s'] > game['p23s'] ? firstCouple+1 : firstCouple;
+        game['winner'] = firstCouple >= 2 ? game.playerOne : game.playerTwo;
+        sendPadelGameWinner(gameid, game);
+    }
 
+    const checkSet = (newGame) => {
+        let currentSet = 0
+        console.log(newGame);
         if((newGame.p11s !== 6 && newGame.p21s !== 6)){
             currentSet = '1s';
         }else if((newGame.p12s !== 6 && newGame.p22s !== 6)){
@@ -92,11 +91,21 @@ const GamePage = () => {
         }else if((newGame.p13s !== 6 && newGame.p23s !== 6)){
             currentSet = '3s';
         }else{
-            newGame['p1ps'] = null;
-            newGame['p2ps'] = null;
-            sendGameScore(gameid, newGame);
-            return;
+            currentSet = 'end';
+            sendWinner(newGame);
+        }
+        return currentSet;
+    }
 
+    const handlePoint = async (player, action) => {
+        let newGame = {...score};
+        const otherPlayer = player === 1 ? 2: 1;
+        const pointsSequence = [15, 30, 40];
+        const playerPoints = player === 1 ? 'p1ps' : 'p2ps';
+
+        const currentSet = checkSet(newGame);
+        if(currentSet === 'end'){
+            return;
         }
 
         if (action === 'increase') {
@@ -123,11 +132,11 @@ const GamePage = () => {
             newGame[playerPoints] = currentIndex === 0 ? 0 : pointsSequence[currentIndex - 1]; // Decrementar puntos
         }
         setScore(newGame);
-        await sendGameScore(gameid, newGame);
+        await sendPadelGameScore(gameid, newGame);
     };
 
     const handleReset = async() => {
-        await resetGame(gameid).then((response) => {
+        await resetPadelGame(gameid).then((response) => {
             fetchData();
         });
     }
@@ -158,8 +167,8 @@ const GamePage = () => {
                                                     {score.p11s >= 0  && <th className="set">{score.p11s}</th>}
                                                     {score.p12s >= 0  && <th className="set">{score.p12s}</th>}
                                                     {score.p13s >= 0  && <th className="set">{score.p13s}</th>}
-                                                    {score.p1ps >= 0 && (score.points === 'ORO' ? <th className="oro">{score.p1ps}</th>
-                                                        : score.points === 'TBR' ? <th className="tbr">{score.p1ps}</th>
+                                                    {score.p1ps >= 0 && (score.mode === 'oro' ? <th className="oro">{score.p1ps}</th>
+                                                        : score.mode === 'tbr' ? <th className="tbr">{score.p1ps}</th>
                                                         : <th className="puntos">{score.p1ps}</th>)
                                                     }
                                                 </tr>
@@ -171,8 +180,8 @@ const GamePage = () => {
                                                     {score.p21s >= 0 && <th className="set">{score.p21s}</th>}
                                                     {score.p22s >= 0 && <th className="set">{score.p22s}</th>}
                                                     {score.p23s >= 0 && <th className="set">{score.p23s}</th>}
-                                                    {score.p2ps >= 0 && (score.points === 'ORO' ? <th className="oro">{score.p2ps}</th>
-                                                        : score.points === 'TBR' ? <th className="tbr">{score.p2ps}</th>
+                                                    {score.p2ps >= 0 && (score.mode === 'oro' ? <th className="oro">{score.p2ps}</th>
+                                                        : score.mode === 'tbr' ? <th className="tbr">{score.p2ps}</th>
                                                         : <th className="puntos">{score.p2ps}</th>)
                                                     }
                                                 </tr>
@@ -183,55 +192,57 @@ const GamePage = () => {
                                 </Card>
                             </Col>
                         </Row>
-                        <Row className="mt-3">
-                            <Col md={12}>
-                                <Card>
-                                    <Card.Header>Botonera</Card.Header>
-                                    <Card.Body>
-                                        <div className='buttons-container'>
-                                            <div>
-                                                <p>Player 1</p>
-                                                <input type="text" value={score.playerOne} onChange={(e) => handleName(e,'playerOne')} className='name-player'/>
+                        { !score.winner &&
+                            <Row className="mt-3">
+                                <Col md={12}>
+                                    <Card>
+                                        <Card.Header>Botonera</Card.Header>
+                                        <Card.Body>
+                                            <div className='buttons-container'>
+                                                <div>
+                                                    <p>Player 1</p>
+                                                    <input type="text" value={score.playerOne} onChange={(e) => handleName(e,'playerOne')} className='name-player'/>
+                                                </div>
+                                                <div className='set-container'>
+                                                    <p>Serve</p>
+                                                    <Button onClick={() => handleServe(1)}>🟡</Button>
+                                                </div>
+                                                <div className='set-container'>
+                                                    <p>Games</p>
+                                                    <Button onClick={() => handleGame(1, 'decrease')}>-</Button>
+                                                    <Button onClick={() => handleGame(1, 'increase')}>+</Button>
+                                                </div>
+                                                <div className='set-container'>
+                                                    <p>Points</p>
+                                                    <Button onClick={() => handlePoint(1, 'decrease')}>-</Button>
+                                                    <Button onClick={() => handlePoint(1, 'increase')}>+</Button>
+                                                </div>
                                             </div>
-                                            <div className='set-container'>
-                                                <p>Serve</p>
-                                                <Button onClick={() => handleServe(1)}>🟡</Button>
+                                            <div className='buttons-container'>
+                                                <div>
+                                                    <p>Player 2</p>
+                                                    <input type="text" value={score.playerTwo} onChange={(e) => handleName(e,'playerTwo')} className='name-player'/>
+                                                </div>
+                                                <div className='set-container'>
+                                                    <Button onClick={() => handleServe(2)}>🟡</Button>
+                                                </div>
+                                                <div className='set-container'>
+                                                    <Button onClick={() => handleGame(2, 'decrease')}>-</Button>
+                                                    <Button onClick={() => handleGame(2, 'increase')}>+</Button>
+                                                </div>
+                                                <div className='set-container'>
+                                                    <Button onClick={() => handlePoint(2, 'decrease')}>-</Button>
+                                                    <Button onClick={() => handlePoint(2, 'increase')}>+</Button>
+                                                </div>
                                             </div>
-                                            <div className='set-container'>
-                                                <p>Games</p>
-                                                <Button onClick={() => handleGame(1, 'decrease')}>-</Button>
-                                                <Button onClick={() => handleGame(1, 'increase')}>+</Button>
+                                            <div className='buttons-container'>
+                                                <Button onClick={handleReset}>Reset</Button>
                                             </div>
-                                            <div className='set-container'>
-                                                <p>Points</p>
-                                                <Button onClick={() => handlePoint(1, 'decrease')}>-</Button>
-                                                <Button onClick={() => handlePoint(1, 'increase')}>+</Button>
-                                            </div>
-                                        </div>
-                                        <div className='buttons-container'>
-                                            <div>
-                                                <p>Player 2</p>
-                                                <input type="text" value={score.playerTwo} onChange={(e) => handleName(e,'playerTwo')} className='name-player'/>
-                                            </div>
-                                            <div className='set-container'>
-                                                <Button onClick={() => handleServe(2)}>🟡</Button>
-                                            </div>
-                                            <div className='set-container'>
-                                                <Button onClick={() => handleGame(2, 'decrease')}>-</Button>
-                                                <Button onClick={() => handleGame(2, 'increase')}>+</Button>
-                                            </div>
-                                            <div className='set-container'>
-                                                <Button onClick={() => handlePoint(2, 'decrease')}>-</Button>
-                                                <Button onClick={() => handlePoint(2, 'increase')}>+</Button>
-                                            </div>
-                                        </div>
-                                        <div className='buttons-container'>
-                                            <Button onClick={handleReset}>Reset</Button>
-                                        </div>
-                                    </Card.Body>
-                                </Card>
-                            </Col>
-                        </Row>
+                                        </Card.Body>
+                                    </Card>
+                                </Col>
+                            </Row>
+                        }
                     </Col>
                 </Row>
             </Container>
@@ -239,4 +250,4 @@ const GamePage = () => {
     );
 };
 
-export default GamePage;
+export default PadelGamePage;

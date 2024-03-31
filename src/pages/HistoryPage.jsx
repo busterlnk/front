@@ -5,23 +5,23 @@ import {Link, useParams} from "react-router-dom";
 import ModalNewPadelGame from "../components/ModalNewPadelGame";
 import ModalNewTenisGame from "../components/ModalNewTenisGame";
 import Grid from "../components/Grid";
+import {gethistoryGameByUser} from "../api/request/historyRequest";
 
-const SportPage = () => {
+const HistoryPage = () => {
 
-    const { id } = useParams();
+    const { sportid } = useParams();
     const userData = JSON.parse(localStorage.getItem('userData'));
     const [games, setGames] = useState([])
     const [sport, setSport] = useState();
-    const [showModal, setShowModal] = useState(false);
 
     useEffect(() => {
         const fetchData = async () => {
-            await getSportById(id).then((responseSport) => {
+            await getSportById(sportid).then((responseSport) => {
                 console.log(responseSport.name);
                 setSport(responseSport);
             })
 
-            const responseGames = await getGamesByUser(userData.id, id);
+            const responseGames = await gethistoryGameByUser(userData.id, sportid);
             console.log(responseGames);
             if(responseGames.status == 200){
                 setGames(responseGames.data);
@@ -31,43 +31,22 @@ const SportPage = () => {
         fetchData();
     }, []);
 
-    const ModalComponent = sport?.name === 'Padel' ? ModalNewPadelGame : sport?.name === 'Tenis' ? ModalNewTenisGame : null;
-
-
-    const handleOpenModal = () => {
-        setShowModal(true);
-    }
-
-    const handleCloseModal = () => {
-        setShowModal(false);
-    }
-
 
     return (
         <Container>
             <div className='sport-container'>
-                <h1>{sport ? (sport.name) : ""}</h1>
-                <Button className='create-game-button' onClick={handleOpenModal}>Nuevo Partido</Button>
-                {ModalComponent && (
-                    <ModalComponent
-                        showModal={showModal}
-                        handleCloseModal={handleCloseModal}
-                        id={id}
-                        userData={userData}
-                    />
-                )}
+                <h1>{sport ? "Historial "+(sport.name) : ""}</h1>
             </div>
-            <Container>
+
                 <Row className="mt-3">
                     <Col md={12}>
                         <Card>
-                            <Grid data={games} history={false}></Grid>
+                            <Grid data={games} history={true}></Grid>
                         </Card>
                     </Col>
                 </Row>
-            </Container>
         </Container>
-    );
+);
 };
 
-export default SportPage;
+export default HistoryPage;

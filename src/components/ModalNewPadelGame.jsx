@@ -1,11 +1,12 @@
 import React, {useState} from 'react';
 import {Modal, Button, Form} from 'react-bootstrap';
-import {createNewGame} from "../api/request/sportRequest";
+import {createNewPadelGame} from "../api/request/sportRequest";
 import {useNavigate} from "react-router-dom";
 
-const ModalNewGame = ({ showModal, handleCloseModal, id, userData}) => {
+const ModalNewPadelGame = ({ showModal, handleCloseModal, id, userData}) => {
     const navigate = useNavigate();
     const [gameType, setGameType] = useState('individual'); // Estado para almacenar el tipo de juego seleccionado
+    const [padelMode, setPadelMode] = useState('normal'); // Estado para almacenar el tipo de juego seleccionado
     const [player1, setPlayer1] = useState(null)
     const [player2, setPlayer2] = useState(null)
 
@@ -24,10 +25,12 @@ const ModalNewGame = ({ showModal, handleCloseModal, id, userData}) => {
             formData.append('individual', true);
         }
 
+        formData.append('mode', padelMode);
+
         if(player1 !== null || player2 !== null){
-            await createNewGame(formData).then((response) => {
+            await createNewPadelGame(formData).then((response) => {
                 if (response.status == 200){
-                    navigate('/sport/'+id+'/game/'+response.data.id);
+                    navigate('/sports/'+id+'/game/'+response.data.id);
                 }
             })
         }else{
@@ -40,6 +43,10 @@ const ModalNewGame = ({ showModal, handleCloseModal, id, userData}) => {
         setGameType(event.target.value);
     }
 
+
+    const handlePadelModeChange = (event) => {
+        setPadelMode(event.target.value);
+    }
     return (
         <Modal show={showModal} onHide={handleCloseModal}>
             <Modal.Header closeButton>
@@ -139,7 +146,36 @@ const ModalNewGame = ({ showModal, handleCloseModal, id, userData}) => {
                             </Form.Group>
                         </div>
                     )}
+                     <Form.Group>
 
+                        <Form.Label>Modalidad</Form.Label>
+                        <div>
+                            <Form.Check
+                                inline
+                                type="radio"
+                                label="NORMAL"
+                                value="normal"
+                                checked={padelMode === 'normal'}
+                                onChange={handlePadelModeChange}
+                            />
+                            <Form.Check
+                                inline
+                                type="radio"
+                                label="ORO"
+                                value="oro"
+                                checked={padelMode === 'oro'}
+                                onChange={handlePadelModeChange}
+                            />
+                            <Form.Check
+                                inline
+                                type="radio"
+                                label="TBR"
+                                value="tbr"
+                                checked={padelMode === 'tbr'}
+                                onChange={handlePadelModeChange}
+                            />
+                        </div>
+                    </Form.Group>
                 </Form>
             </Modal.Body>
             <Modal.Footer>
@@ -154,4 +190,4 @@ const ModalNewGame = ({ showModal, handleCloseModal, id, userData}) => {
     );
 };
 
-export default ModalNewGame;
+export default ModalNewPadelGame;

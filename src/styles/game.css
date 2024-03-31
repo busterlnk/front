@@ -98,3 +98,18 @@ table tbody{
         }
     }
 }
+
+.sport-container{
+    display: flex;
+    align-items: center;
+    h1{
+        margin: 10px 40px;
+    }
+    .create-game-button{
+        height: 50px;
+    }
+}
+
+.grid{
+    text-align: left;
+}

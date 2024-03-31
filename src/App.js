@@ -6,7 +6,8 @@ import Login from './pages/Login';
 import Header from './components/Header';
 import Home from './pages/Home'
 import SportPage from "./pages/SportPage";
-import GamePage from "./pages/GamePage";
+import PadelGamePage from "./pages/PadelGamePage";
+import HistoryPage from "./pages/HistoryPage";
 
 function App() {
   return (
@@ -18,7 +19,8 @@ function App() {
                     <Route path="/login" element={<Login />} />
                     <Route path="/home" element={<Home />} />
                     <Route path="/sports/:id" element={<SportPage />} />
-                    <Route path="/sports/:sportid/game/:gameid" element={<GamePage />} />
+                    <Route path="/sports/:sportid/game/:gameid" element={<PadelGamePage />} />
+                    <Route path="/sports/:sportid/history" element={<HistoryPage />} />
                     {/*<Route />*/}
                 </Routes>
             </Router>
