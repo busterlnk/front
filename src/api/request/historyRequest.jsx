@@ -6,7 +6,6 @@ export const gethistoryGameByUser = async(userid, sportid) => {
 
         formData.append('userid', userid)
         formData.append('sportid', sportid);
-        console.log(formData);
 
         const response = await axios.post(
             'https://127.0.0.1:8000/api/history/games_user',
@@ -18,8 +17,6 @@ export const gethistoryGameByUser = async(userid, sportid) => {
                 },
             }
         );
-
-        console.log(response.status)
         return response;
     } catch (error) {
         console.log(error.response);

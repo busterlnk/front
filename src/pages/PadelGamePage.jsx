@@ -17,7 +17,6 @@ const PadelGamePage = () => {
     const fetchData = async () => {
         await getGameScore(gameid).then((response)=>{
             if(response.status === 200){
-                console.log(response.data);
                 setScore(response.data);
             }
         })
@@ -83,7 +82,7 @@ const PadelGamePage = () => {
 
     const checkSet = (newGame) => {
         let currentSet = 0
-        console.log(newGame);
+
         if((newGame.p11s !== 6 && newGame.p21s !== 6)){
             currentSet = '1s';
         }else if((newGame.p12s !== 6 && newGame.p22s !== 6)){

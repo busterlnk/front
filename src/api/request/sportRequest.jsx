@@ -52,13 +52,29 @@ export const getGamesByUser = async(userid, sportid) => {
                 },
             }
         );
-
-        console.log(response.status)
         return response;
     } catch (error) {
         console.log(error.response);
     }
 
+}
+
+export const deleteGame = async(data) => {
+    try{
+        const sport = data.name.toLowerCase();
+        const response = await axios.delete(
+            'https://127.0.0.1:8000/api/'+sport+'_games/'+data.game_id,
+            {
+                headers: {
+                    'Content-Type': 'application/ld+json',
+                    Authorization: `Bearer ${localStorage.getItem('jwt')}`
+                },
+            })
+
+        return response;
+    }catch (e){
+        console.error(e.error)
+    }
 }
 
 export const createNewPadelGame = async(formData) => {
@@ -74,8 +90,6 @@ export const createNewPadelGame = async(formData) => {
                 },
             }
         );
-
-        console.log(response)
         return response;
     } catch (error) {
         console.log(error.response);

@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
-import {Container, Row, Col, ListGroup, Card, Button} from 'react-bootstrap';
+import {Container, Row, Col, Card, Button} from 'react-bootstrap';
 import {getGamesByUser, getSportById} from "../api/request/sportRequest";
-import {Link, useParams} from "react-router-dom";
+import {useParams} from "react-router-dom";
 import ModalNewPadelGame from "../components/ModalNewPadelGame";
 import ModalNewTenisGame from "../components/ModalNewTenisGame";
 import Grid from "../components/Grid";
@@ -14,25 +14,27 @@ const SportPage = () => {
     const [sport, setSport] = useState();
     const [showModal, setShowModal] = useState(false);
 
+    const fetchUser = async () => {
+        await getSportById(id).then((responseSport) => {
+            setSport(responseSport);
+        })
+    }
+
+    const fetchGames = async () => {
+        const responseGames = await getGamesByUser(userData.id, id);
+        if(responseGames.status == 200){
+            setGames(responseGames.data);
+        }else{
+            setGames([])
+        }
+    };
+
     useEffect(() => {
-        const fetchData = async () => {
-            await getSportById(id).then((responseSport) => {
-                console.log(responseSport.name);
-                setSport(responseSport);
-            })
-
-            const responseGames = await getGamesByUser(userData.id, id);
-            console.log(responseGames);
-            if(responseGames.status == 200){
-                setGames(responseGames.data);
-            }
-        };
-
-        fetchData();
+        fetchUser()
+        fetchGames();
     }, []);
 
     const ModalComponent = sport?.name === 'Padel' ? ModalNewPadelGame : sport?.name === 'Tenis' ? ModalNewTenisGame : null;
-
 
     const handleOpenModal = () => {
         setShowModal(true);
@@ -41,7 +43,6 @@ const SportPage = () => {
     const handleCloseModal = () => {
         setShowModal(false);
     }
-
 
     return (
         <Container>
@@ -61,7 +62,7 @@ const SportPage = () => {
                 <Row className="mt-3">
                     <Col md={12}>
                         <Card>
-                            <Grid data={games} history={false}></Grid>
+                            <Grid data={games} history={false} updateData={fetchGames}></Grid>
                         </Card>
                     </Col>
                 </Row>
