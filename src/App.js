@@ -8,6 +8,7 @@ import Home from './pages/Home'
 import SportPage from "./pages/SportPage";
 import PadelGamePage from "./pages/PadelGamePage";
 import HistoryPage from "./pages/HistoryPage";
+import TournamentsPage from "./pages/TournamentsPage";
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
                     <Route path="/sports/:id" element={<SportPage />} />
                     <Route path="/sports/:sportid/game/:gameid" element={<PadelGamePage />} />
                     <Route path="/sports/:sportid/history" element={<HistoryPage />} />
+                    <Route path="/sports/:sportid/tournaments" element={<TournamentsPage />} />
                     {/*<Route />*/}
                 </Routes>
             </Router>

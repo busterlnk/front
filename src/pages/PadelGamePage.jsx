@@ -86,7 +86,7 @@ const PadelGamePage = () => {
         if((newGame.p11s !== 6 && newGame.p21s !== 6)){
             currentSet = '1s';
         }else if((newGame.p12s !== 6 && newGame.p22s !== 6)){
-            currentSet = '2s'
+            currentSet = '2s';
         }else if((newGame.p13s !== 6 && newGame.p23s !== 6)){
             currentSet = '3s';
         }else{

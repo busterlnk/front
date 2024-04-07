@@ -84,69 +84,25 @@ const ModalNewPadelGame = ({ showModal, handleCloseModal, id, userData}) => {
                         </div>
                     </Form.Group>
 
-                    {gameType === 'individual' && (
-                        <div>
-                            <Form.Group controlId="player1">
-                                <Form.Label>Jugador 1</Form.Label>
-                                <Form.Control
-                                    type="text"
-                                    placeholder="Nombre del Jugador 1"
-                                    value={player1}
-                                    onChange={(event) => setPlayer1(event.target.value)}/>
-                            </Form.Group>
-                            <Form.Group controlId="player2">
-                                <Form.Label>Jugador 2</Form.Label>
-                                <Form.Control
-                                    type="text"
-                                    placeholder="Nombre del Jugador 2"
-                                    value={player2}
-                                    onChange={(event) => setPlayer2(event.target.value)}/>
-                            </Form.Group>
-                        </div>
-                    )}
-
-                    {gameType === 'parejas' && (
-                        <div>
-                            <Form.Group controlId="partner1">
-                                <Form.Label>Pareja 1</Form.Label>
-                                <Form.Control
-                                    type="text"
-                                    placeholder="Nombre de la Pareja 1"
-                                    value={player1}
-                                    onChange={(event) => setPlayer1(event.target.value)}/>
-                            </Form.Group>
-                            <Form.Group controlId="partner2">
-                                <Form.Label>Pareja 2</Form.Label>
-                                <Form.Control
-                                    type="text"
-                                    placeholder="Nombre de la Pareja 2"
-                                    value={player2}
-                                    onChange={(event) => setPlayer2(event.target.value)}/>
-                            </Form.Group>
-                        </div>
-                    )}
-
-                    {gameType === 'equipos' && (
-                        <div>
-                            <Form.Group controlId="team1">
-                                <Form.Label>Equipo 1</Form.Label>
-                                <Form.Control
-                                    type="text"
-                                    placeholder="Nombre del Equipo 1"
-                                    value={player1}
-                                    onChange={(event) => setPlayer1(event.target.value)}/>
-                            </Form.Group>
-                            <Form.Group controlId="team2">
-                                <Form.Label>Equipo 2</Form.Label>
-                                <Form.Control
-                                    type="text"
-                                    placeholder="Nombre del Equipo 2"
-                                    value={player2}
-                                    onChange={(event) => setPlayer2(event.target.value)}/>
-                            </Form.Group>
-                        </div>
-                    )}
-                     <Form.Group>
+                    <div>
+                        <Form.Group controlId="player1">
+                            <Form.Label>{gameType === 'individual' ? 'Jugador' : 'Pareja'} 1</Form.Label>
+                            <Form.Control
+                                type="text"
+                                placeholder={`Nombre del ${gameType === 'individual' ? 'Jugador' : 'Pareja'} 1`}
+                                value={player1}
+                                onChange={(event) => setPlayer1(event.target.value)}/>
+                        </Form.Group>
+                        <Form.Group controlId="player2">
+                            <Form.Label>Jugador 2</Form.Label>
+                            <Form.Control
+                                type="text"
+                                placeholder={`Nombre del ${gameType === 'individual' ? 'Jugador' : 'Pareja'} 2`}
+                                value={player2}
+                                onChange={(event) => setPlayer2(event.target.value)}/>
+                        </Form.Group>
+                    </div>
+                    <Form.Group>
 
                         <Form.Label>Modalidad</Form.Label>
                         <div>
