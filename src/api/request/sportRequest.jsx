@@ -3,7 +3,7 @@ import axios from 'axios'
 export const getSports = async () => {
     try {
         const response = await axios.get(
-            'https://127.0.0.1:8084/api/sports',
+            'http://localhost:8087/api/sports',
             {
                 headers: {
                     'Content-Type': 'application/json',
@@ -21,7 +21,7 @@ export const getSports = async () => {
 export const getSportById = async (id) => {
     try {
         const response = await axios.get(
-            'https://127.0.0.1:8084/api/sports/'+id,
+            'http://localhost:8087/api/sports/'+id,
             {
                 headers: {
                     'Content-Type': 'application/json',
@@ -43,7 +43,7 @@ export const getGamesByUser = async(userid, sportid) => {
         formData.append('sportid', sportid);
 
         const response = await axios.post(
-            'https://127.0.0.1:8084/api/games_user',
+            'http://localhost:8087/api/games_user',
             formData,
             {
                 headers: {
@@ -63,7 +63,7 @@ export const deleteGame = async(data) => {
     try{
         const sport = data.name.toLowerCase();
         const response = await axios.delete(
-            'https://127.0.0.1:8084/api/'+sport+'_games/'+data.game_id,
+            'http://localhost:8087/api/'+sport+'_games/'+data.game_id,
             {
                 headers: {
                     'Content-Type': 'application/ld+json',
@@ -81,7 +81,7 @@ export const createNewPadelGame = async(formData) => {
     try {
 
         const response = await axios.post(
-            'https://127.0.0.1:8084/api/padel/create_game',
+            'http://localhost:8087/api/padel/create_game',
             formData,
             {
                 headers: {
@@ -102,7 +102,7 @@ export const createNewTenisGame = async(formData) => {
 
         console.log('ss');
         // const response = await axios.post(
-        //     'https://127.0.0.1:8084/api/padel/create_game',
+        //     'http://localhost:8087/api/padel/create_game',
         //     formData,
         //     {
         //         headers: {
@@ -122,7 +122,7 @@ export const createNewTenisGame = async(formData) => {
 export const getGameScore = async(gameid) => {
     try {
         const response = await axios.get(
-            'https://127.0.0.1:8084/api/padel_games/'+gameid,
+            'http://localhost:8087/api/padel_games/'+gameid,
             {
                 headers: {
                     'Content-Type': 'application/ld+json',

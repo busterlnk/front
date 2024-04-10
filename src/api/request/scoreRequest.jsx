@@ -3,7 +3,7 @@ import axios from 'axios'
 export const sendPadelGameScore = async (gameid, score) => {
     try {
         const response = await axios.patch(
-            'https://127.0.0.1:8084/api/padel_games/'+gameid,score,
+            'http://localhost:8087/api/padel_games/'+gameid,score,
             {
                 headers: {
                     'Content-Type': 'application/merge-patch+json',
@@ -25,7 +25,7 @@ export const sendPadelGameWinner = async (gameid, score) => {
         formData.append('winner', score.winner);
 
         const response = await axios.post(
-            'https://127.0.0.1:8084/api/padel/set_winner',formData,
+            'http://localhost:8087/api/padel/set_winner',formData,
             {
                 headers: {
                     'Content-Type': 'application/merge-patch+json',
@@ -45,7 +45,7 @@ export const resetPadelGame = async (gameid) => {
         const formData = new FormData();
         formData.append('gameid', gameid);
         const response = await axios.post(
-            'https://127.0.0.1:8084/api/padel/reset_game',formData,
+            'http://localhost:8087/api/padel/reset_game',formData,
             {
                 headers: {
                     'Content-Type': 'application/ld+json',
