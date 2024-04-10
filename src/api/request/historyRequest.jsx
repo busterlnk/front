@@ -8,7 +8,7 @@ export const gethistoryGameByUser = async(userid, sportid) => {
         formData.append('sportid', sportid);
 
         const response = await axios.post(
-            'https://127.0.0.1:8000/api/history/games_user',
+            'https://127.0.0.1:8084/api/history/games_user',
             formData,
             {
                 headers: {

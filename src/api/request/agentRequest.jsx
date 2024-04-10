@@ -4,7 +4,7 @@ import axios from "axios";
 export const login = async (formData) => {
     try {
         const response = await axios.post(
-            'https://127.0.0.1:8000/api/login',formData,
+            'https://127.0.0.1:8084/api/login',formData,
             {
                 headers: {
                     'Content-Type': 'application/json',
@@ -25,7 +25,7 @@ export const fetchUser = async (authToken) => {
 
         const response = await axios.get(
             // 'https://localhost/auth',
-            'https://127.0.0.1:8000/api/get_user',
+            'https://127.0.0.1:8084/api/get_user',
             {
                 headers: {
                     'Content-Type': 'application/json',
