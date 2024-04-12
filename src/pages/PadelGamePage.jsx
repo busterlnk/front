@@ -71,8 +71,6 @@ const PadelGamePage = () => {
 
     const sendWinner = async(game) => {
         let firstCouple = 0;
-        // game['p2ps'] = null;
-        // game['p1ps'] = null;
         firstCouple = game['p11s'] > game['p21s'] ? firstCouple+1 : firstCouple;
         firstCouple = game['p12s'] > game['p22s'] ? firstCouple+1 : firstCouple;
         firstCouple = game['p13s'] > game['p23s'] ? firstCouple+1 : firstCouple;
@@ -99,7 +97,7 @@ const PadelGamePage = () => {
     const handlePoint = async (player, action) => {
         let newGame = {...score};
         const otherPlayer = player === 1 ? 2: 1;
-        const pointsSequence = [15, 30, 40];
+        const pointsSequence = ['15', '30', '40', 'AV'];
         const playerPoints = player === 1 ? 'p1ps' : 'p2ps';
 
         const currentSet = checkSet(newGame);
@@ -109,26 +107,33 @@ const PadelGamePage = () => {
 
         if (action === 'increase') {
             let currentIndex = pointsSequence.indexOf(newGame[playerPoints]);
-            newGame[playerPoints] = currentIndex === 2 ? 0 : pointsSequence[currentIndex + 1];
-            if(!newGame['p'+otherPlayer+'ps']){
-                newGame['p'+otherPlayer+'ps'] = 0
+
+            if(newGame['p1ps'] == '40' && newGame['p2ps'] == '40' ){
+                newGame[playerPoints] = currentIndex === 2 ? pointsSequence[currentIndex + 1] : '0';
             }else{
-                newGame['p'+otherPlayer+'ps'] = currentIndex === 2 ? 0 : newGame['p'+otherPlayer+'ps'];
-            }
-            if (currentIndex === 2) {
-                // Incrementar juegos y verificar si el set termina
-                if(newGame['p'+player+currentSet]){
-                    newGame['p'+player+currentSet]++;
+                newGame[playerPoints] = currentIndex >= 2 ? '0' : pointsSequence[currentIndex + 1];
+                if(!newGame['p'+otherPlayer+'ps']){
+                    newGame['p'+otherPlayer+'ps'] = '0'
                 }else{
-                    newGame['p'+player+currentSet] = 1;
-                    if(!newGame['p'+otherPlayer+currentSet]){
-                        newGame['p'+otherPlayer+currentSet] = 0;
+                    newGame['p'+otherPlayer+'ps'] = currentIndex >= 2 ? '0' : newGame['p'+otherPlayer+'ps'];
+                }
+
+                if (currentIndex >= 2) {
+                    // Incrementar juegos y verificar si el set termina
+                    if(newGame['p'+player+currentSet]){
+                        newGame['p'+player+currentSet]++;
+                    }else{
+                        newGame['p'+player+currentSet] = 1;
+                        if(!newGame['p'+otherPlayer+currentSet]){
+                            newGame['p'+otherPlayer+currentSet] = 0;
+                        }
                     }
                 }
             }
+
         } else if (action === 'decrease' && newGame[playerPoints] > 0) {
             let currentIndex = pointsSequence.indexOf(newGame[playerPoints]);
-            newGame[playerPoints] = currentIndex === 0 ? 0 : pointsSequence[currentIndex - 1]; // Decrementar puntos
+            newGame[playerPoints] = currentIndex === 0 ? '0' : pointsSequence[currentIndex - 1]; // Decrementar puntos
         }
         setScore(newGame);
         await sendPadelGameScore(gameid, newGame);
@@ -166,7 +171,7 @@ const PadelGamePage = () => {
                                                     {score.p11s >= 0  && <th className="set">{score.p11s}</th>}
                                                     {score.p12s >= 0  && <th className="set">{score.p12s}</th>}
                                                     {score.p13s >= 0  && <th className="set">{score.p13s}</th>}
-                                                    {score.p1ps >= 0 && (score.mode === 'oro' ? <th className="oro">{score.p1ps}</th>
+                                                    {score.p1ps >= '0' && (score.mode === 'oro' ? <th className="oro">{score.p1ps}</th>
                                                         : score.mode === 'tbr' ? <th className="tbr">{score.p1ps}</th>
                                                         : <th className="puntos">{score.p1ps}</th>)
                                                     }
@@ -179,7 +184,7 @@ const PadelGamePage = () => {
                                                     {score.p21s >= 0 && <th className="set">{score.p21s}</th>}
                                                     {score.p22s >= 0 && <th className="set">{score.p22s}</th>}
                                                     {score.p23s >= 0 && <th className="set">{score.p23s}</th>}
-                                                    {score.p2ps >= 0 && (score.mode === 'oro' ? <th className="oro">{score.p2ps}</th>
+                                                    {score.p2ps >= '0' && (score.mode === 'oro' ? <th className="oro">{score.p2ps}</th>
                                                         : score.mode === 'tbr' ? <th className="tbr">{score.p2ps}</th>
                                                         : <th className="puntos">{score.p2ps}</th>)
                                                     }
