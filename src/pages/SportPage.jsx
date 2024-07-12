@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {Container, Row, Col, Card, Button} from 'react-bootstrap';
-import {getPadelGamesByUser, getTenisGamesByUser} from "../api/request/sportRequest";
+import {getGamesByUser, getPadelGamesByUser, getTenisGamesByUser} from "../api/request/sportRequest";
 import {useParams} from "react-router-dom";
 import ModalNewPadelGame from "../components/ModalNewPadelGame";
 import ModalNewTenisGame from "../components/ModalNewTenisGame";
@@ -14,16 +14,11 @@ const SportPage = () => {
     const [sport, setSport] = useState();
     const [showModal, setShowModal] = useState(false);
 
-    const fetchUser = async () => {
-        // await getSportById(id).then((responseSport) => {
-        //     setSport(responseSport);
-        // })
-    }
-
     const fetchGames = async () => {
-        const responseGames =
-            id == 1 ? await getPadelGamesByUser(userData.id, id)
-            : id == 2 ? await getTenisGamesByUser(userData.id, id) : '';
+        const sport = id == 1 ? 'padel' : id == 2 ? 'tenis' : '';
+        console.log(sport);
+
+        const responseGames =await getGamesByUser(userData.id, sport);
         if(responseGames.status == 200){
             setGames(responseGames.data);
         }else{
@@ -32,7 +27,6 @@ const SportPage = () => {
     };
 
     useEffect(() => {
-        fetchUser()
         fetchGames();
     }, []);
 

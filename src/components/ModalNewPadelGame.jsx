@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import {Modal, Button, Form} from 'react-bootstrap';
-import {createNewPadelGame} from "../api/request/sportRequest";
+import {createNewGame} from "../api/request/sportRequest";
 import {useNavigate} from "react-router-dom";
 
 const ModalNewPadelGame = ({ showModal, handleCloseModal, id, userData}) => {
@@ -27,7 +27,7 @@ const ModalNewPadelGame = ({ showModal, handleCloseModal, id, userData}) => {
         formData.append('mode', padelMode);
 
         if(player1 !== null || player2 !== null){
-            await createNewPadelGame(formData).then((response) => {
+            await createNewGame(formData, 'padel').then((response) => {
                 if (response.status == 200){
                     navigate('/sports/'+id+'/game/'+response.data.id);
                 }
