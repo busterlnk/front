@@ -5,8 +5,7 @@ import {useParams} from "react-router-dom";
 import '../styles/game.css';
 import {resetGame, sendGameScore, sendGameWinner} from "../api/request/scoreRequest";
 
-
-const PadelGamePage = () => {
+const TenisGamePage = () => {
 
     const { gameid } = useParams();
     const [score, setScore] = useState([])
@@ -16,7 +15,7 @@ const PadelGamePage = () => {
     }, []);
 
     const fetchData = async () => {
-        await getGameScore(gameid, 'padel').then((response)=>{
+        await getGameScore(gameid, 'tenis').then((response)=>{
             if(response.status === 200){
                 setScore(response.data);
             }
@@ -28,14 +27,15 @@ const PadelGamePage = () => {
         let newGame = {...score};
         newGame[player] = e.target.value
         setScore(newGame);
-        await sendGameScore(gameid,newGame,'padel');
+        await sendGameScore(gameid,newGame,'tenis');
     }
 
     const handleServe = async(player) => {
         let newGame = {...score};
         newGame['saque'] = player;
         setScore(newGame);
-        await sendGameScore(gameid, newGame,'padel');
+        await sendGameScore(gameid,newGame,'tenis');
+
     }
 
     const handleGame = async (player, action) => {
@@ -67,7 +67,8 @@ const PadelGamePage = () => {
         }
 
         setScore(newGame);
-        await sendGameScore(gameid, newGame,'padel');
+        await sendGameScore(gameid,newGame,'tenis');
+
     };
 
     const sendWinner = async(game) => {
@@ -76,7 +77,7 @@ const PadelGamePage = () => {
         firstCouple = game['p12s'] > game['p22s'] ? firstCouple+1 : firstCouple;
         firstCouple = game['p13s'] > game['p23s'] ? firstCouple+1 : firstCouple;
         game['winner'] = firstCouple >= 2 ? game.playerOne : game.playerTwo;
-        sendGameWinner(gameid, game, 'padel');
+        sendGameWinner(gameid, game, 'tenis');
     }
 
     const checkSet = (newGame) => {
@@ -139,11 +140,12 @@ const PadelGamePage = () => {
             newGame[playerPoints] = currentIndex === 0 ? '0' : pointsSequence[currentIndex - 1]; // Decrementar puntos
         }
         setScore(newGame);
-        await sendGameScore(gameid, newGame,'padel');
+        await sendGameScore(gameid,newGame,'tenis');
+
     };
 
     const handleReset = async() => {
-        await resetGame(gameid, 'padel').then((response) => {
+        await resetGame(gameid).then((response) => {
             fetchData();
         });
     }
@@ -257,4 +259,4 @@ const PadelGamePage = () => {
     );
 };
 
-export default PadelGamePage;
+export default TenisGamePage;

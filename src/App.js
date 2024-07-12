@@ -8,6 +8,7 @@ import Home from './pages/Home'
 import SportPage from "./pages/SportPage";
 import PadelGamePage from "./pages/PadelGamePage";
 import HistoryPage from "./pages/HistoryPage";
+import TenisGamePage from "./pages/TenisGamePage";
 
 function App() {
   return (
@@ -19,7 +20,8 @@ function App() {
                     <Route path="/login" element={<Login />} />
                     <Route path="/home" element={<Home />} />
                     <Route path="/sports/:id" element={<SportPage />} />
-                    <Route path="/sports/:sportid/game/:gameid" element={<PadelGamePage />} />
+                    <Route path="/sports/1/game/:gameid" element={<PadelGamePage />} />
+                    <Route path="/sports/2/game/:gameid" element={<TenisGamePage />} />
                     <Route path="/sports/:sportid/history" element={<HistoryPage />} />
                     {/*<Route />*/}
                 </Routes>

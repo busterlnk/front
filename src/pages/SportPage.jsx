@@ -23,8 +23,7 @@ const SportPage = () => {
     const fetchGames = async () => {
         const responseGames =
             id == 1 ? await getPadelGamesByUser(userData.id, id)
-            : id == 2 ?? await getTenisGamesByUser(userData.id, id);
-
+            : id == 2 ? await getTenisGamesByUser(userData.id, id) : '';
         if(responseGames.status == 200){
             setGames(responseGames.data);
         }else{

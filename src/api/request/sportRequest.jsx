@@ -5,7 +5,6 @@ export const getPadelGamesByUser = async(userid, sportid) => {
         const formData = new FormData();
 
         formData.append('userid', userid)
-        formData.append('sportid', sportid);
 
         const response = await axios.post(
             'http://localhost:8087/api/padel_games_user',
@@ -24,15 +23,14 @@ export const getPadelGamesByUser = async(userid, sportid) => {
 
 }
 
-export const getTenisGamesByUser = async(userid, sportid) => {
+export const getTenisGamesByUser = async(userid) => {
     try {
         const formData = new FormData();
 
         formData.append('userid', userid)
-        formData.append('sportid', sportid);
 
         const response = await axios.post(
-            'http://localhost:8087/api/games_user',
+            'http://localhost:8087/api/tenis_games_user',
             formData,
             {
                 headers: {
@@ -50,9 +48,8 @@ export const getTenisGamesByUser = async(userid, sportid) => {
 
 export const deleteGame = async(data) => {
     try{
-        const sport = data.name.toLowerCase();
         const response = await axios.delete(
-            'http://localhost:8087/api/'+sport+'_games/'+data.game_id,
+            'http://localhost:8087/api/'+data.sport+'_games/'+data.game_id,
             {
                 headers: {
                     'Content-Type': 'application/ld+json',
@@ -62,7 +59,7 @@ export const deleteGame = async(data) => {
 
         return response;
     }catch (e){
-        console.error(e.error)
+        console.error(e)
     }
 }
 
@@ -88,30 +85,28 @@ export const createNewPadelGame = async(formData) => {
 
 export const createNewTenisGame = async(formData) => {
     try {
+        const response = await axios.post(
+            'http://localhost:8087/api/tenis/create_game',
+            formData,
+            {
+                headers: {
+                    'Content-Type': 'application/ld+json',
+                    Authorization: `Bearer ${localStorage.getItem('jwt')}`
+                },
+            }
+        );
 
-        console.log('ss');
-        // const response = await axios.post(
-        //     'http://localhost:8087/api/padel/create_game',
-        //     formData,
-        //     {
-        //         headers: {
-        //             'Content-Type': 'application/ld+json',
-        //             Authorization: `Bearer ${localStorage.getItem('jwt')}`
-        //         },
-        //     }
-        // );
-        //
-        // console.log(response)
-        // return response;
+        console.log(response)
+        return response;
     } catch (error) {
         console.log(error.response);
     }
 }
 
-export const getGameScore = async(gameid) => {
+export const getGameScore = async(gameid, sport) => {
     try {
         const response = await axios.get(
-            'http://localhost:8087/api/padel_games/'+gameid,
+            `http://localhost:8087/api/${sport}_games/`+gameid,
             {
                 headers: {
                     'Content-Type': 'application/ld+json',
