@@ -1,41 +1,30 @@
 import axios from 'axios'
 
-export const getSports = async () => {
+export const getPadelGamesByUser = async(userid, sportid) => {
     try {
-        const response = await axios.get(
-            'http://localhost:8087/api/sports',
+        const formData = new FormData();
+
+        formData.append('userid', userid)
+        formData.append('sportid', sportid);
+
+        const response = await axios.post(
+            'http://localhost:8087/api/padel_games_user',
+            formData,
             {
                 headers: {
-                    'Content-Type': 'application/json',
+                    'Content-Type': 'application/ld+json',
                     Authorization: `Bearer ${localStorage.getItem('jwt')}`
                 },
             }
         );
-
-        return response.data['hydra:member'];
+        return response;
     } catch (error) {
         console.log(error.response);
     }
+
 }
 
-export const getSportById = async (id) => {
-    try {
-        const response = await axios.get(
-            'http://localhost:8087/api/sports/'+id,
-            {
-                headers: {
-                    'Content-Type': 'application/json',
-                    Authorization: `Bearer ${localStorage.getItem('jwt')}`
-                },
-            }
-        );
-        return response.data;
-    } catch (error) {
-        console.log(error.response);
-    }
-}
-
-export const getGamesByUser = async(userid, sportid) => {
+export const getTenisGamesByUser = async(userid, sportid) => {
     try {
         const formData = new FormData();
 

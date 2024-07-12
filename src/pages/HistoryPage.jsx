@@ -5,7 +5,7 @@ import {Link, useParams} from "react-router-dom";
 import ModalNewPadelGame from "../components/ModalNewPadelGame";
 import ModalNewTenisGame from "../components/ModalNewTenisGame";
 import Grid from "../components/Grid";
-import {gethistoryGameByUser} from "../api/request/historyRequest";
+import {getHistoryPadelGamesByUser} from "../api/request/historyRequest";
 
 const HistoryPage = () => {
 
@@ -16,12 +16,12 @@ const HistoryPage = () => {
 
     useEffect(() => {
         const fetchData = async () => {
-            await getSportById(sportid).then((responseSport) => {
-                console.log(responseSport.name);
-                setSport(responseSport);
-            })
+            // await getSportById(sportid).then((responseSport) => {
+            //     console.log(responseSport.name);
+            //     setSport(responseSport);
+            // })
 
-            const responseGames = await gethistoryGameByUser(userData.id, sportid);
+            const responseGames = await getHistoryPadelGamesByUser(userData.id, sportid);
             console.log(responseGames);
             if(responseGames.status == 200){
                 setGames(responseGames.data);

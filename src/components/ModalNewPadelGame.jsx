@@ -15,7 +15,6 @@ const ModalNewPadelGame = ({ showModal, handleCloseModal, id, userData}) => {
         const formData = new FormData();
 
         formData.append('userid', userData.id)
-        formData.append('sportid', id);
         formData.append('player_one', player1);
         formData.append('player_two', player2);
 

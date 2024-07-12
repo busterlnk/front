@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {Container, Row, Col, Card, Button} from 'react-bootstrap';
-import {getGamesByUser, getSportById} from "../api/request/sportRequest";
+import {getPadelGamesByUser, getTenisGamesByUser} from "../api/request/sportRequest";
 import {useParams} from "react-router-dom";
 import ModalNewPadelGame from "../components/ModalNewPadelGame";
 import ModalNewTenisGame from "../components/ModalNewTenisGame";
@@ -15,13 +15,16 @@ const SportPage = () => {
     const [showModal, setShowModal] = useState(false);
 
     const fetchUser = async () => {
-        await getSportById(id).then((responseSport) => {
-            setSport(responseSport);
-        })
+        // await getSportById(id).then((responseSport) => {
+        //     setSport(responseSport);
+        // })
     }
 
     const fetchGames = async () => {
-        const responseGames = await getGamesByUser(userData.id, id);
+        const responseGames =
+            id == 1 ? await getPadelGamesByUser(userData.id, id)
+            : id == 2 ?? await getTenisGamesByUser(userData.id, id);
+
         if(responseGames.status == 200){
             setGames(responseGames.data);
         }else{
@@ -34,7 +37,8 @@ const SportPage = () => {
         fetchGames();
     }, []);
 
-    const ModalComponent = sport?.name === 'Padel' ? ModalNewPadelGame : sport?.name === 'Tenis' ? ModalNewTenisGame : null;
+    const ModalComponent = id === '1' ? ModalNewPadelGame : id === '2' ? ModalNewTenisGame : null;
+    const sportName = id === '1' ? "Padel" : id === '2' ? "Tenis" : "Futbol";
 
     const handleOpenModal = () => {
         setShowModal(true);
@@ -47,7 +51,7 @@ const SportPage = () => {
     return (
         <Container>
             <div className='sport-container'>
-                <h1>{sport ? (sport.name) : ""}</h1>
+                <h1>{sportName}</h1>
                 <Button className='create-game-button' onClick={handleOpenModal}>Nuevo Partido</Button>
                 {ModalComponent && (
                     <ModalComponent
