@@ -9,6 +9,7 @@ import SportPage from "./pages/SportPage";
 import PadelGamePage from "./pages/PadelGamePage";
 import HistoryPage from "./pages/HistoryPage";
 import TenisGamePage from "./pages/TenisGamePage";
+import SquashGamePage from "./pages/SquashGamePage";
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
                     <Route path="/sports/:id" element={<SportPage />} />
                     <Route path="/sports/1/game/:gameid" element={<PadelGamePage />} />
                     <Route path="/sports/2/game/:gameid" element={<TenisGamePage />} />
+                    <Route path="/sports/3/game/:gameid" element={<SquashGamePage />} />
                     <Route path="/sports/:sportid/history" element={<HistoryPage />} />
                     {/*<Route />*/}
                 </Routes>

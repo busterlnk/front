@@ -13,7 +13,7 @@ const HistoryPage = () => {
 
     useEffect(() => {
         const fetchData = async () => {
-            const sportName = sportid == 1 ? 'padel' : sportid == 2 ? 'tenis' : '';
+            const sportName = sportid == 1 ? 'padel' : sportid == 2 ? 'tenis' : sportid == 3 ? 'squash' : '';
             setSport(sportName);
 
             const responseGames = await getHistoryGamesByUser(userData.id, sportName);

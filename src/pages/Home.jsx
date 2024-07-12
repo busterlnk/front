@@ -5,7 +5,7 @@ import {Link} from "react-router-dom";
 
 const Home = () => {
 
-    const sports = [{id: 1, name: 'Padel'},{id:2, name: 'Tenis'}];
+    const sports = [{id: 1, name: 'Padel'},{id:2, name: 'Tenis'}, {id: 3, name: 'Squash'}];
 
 
     return (

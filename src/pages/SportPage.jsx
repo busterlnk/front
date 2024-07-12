@@ -5,6 +5,7 @@ import {useParams} from "react-router-dom";
 import ModalNewPadelGame from "../components/ModalNewPadelGame";
 import ModalNewTenisGame from "../components/ModalNewTenisGame";
 import Grid from "../components/Grid";
+import ModalNewSquashGame from "../components/ModalNewSquashGame";
 
 const SportPage = () => {
 
@@ -30,8 +31,8 @@ const SportPage = () => {
         fetchGames();
     }, []);
 
-    const ModalComponent = id === '1' ? ModalNewPadelGame : id === '2' ? ModalNewTenisGame : null;
-    const sportName = id === '1' ? "Padel" : id === '2' ? "Tenis" : "Futbol";
+    const ModalComponent = id === '1' ? ModalNewPadelGame : id === '2' ? ModalNewTenisGame :  id === '3' ? ModalNewSquashGame : null
+    const sportName = id === '1' ? "Padel" : id === '2' ? "Tenis" : id === '3' ? 'Squash' : 'futbol';
 
     const handleOpenModal = () => {
         setShowModal(true);
