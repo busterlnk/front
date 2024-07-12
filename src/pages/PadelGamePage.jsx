@@ -108,8 +108,10 @@ const PadelGamePage = () => {
         if (action === 'increase') {
             let currentIndex = pointsSequence.indexOf(newGame[playerPoints]);
 
-            if(newGame['p1ps'] == '40' && newGame['p2ps'] == '40' ){
+            if(newGame[`p${player}ps`] == '40' && newGame[`p${otherPlayer}ps`] == '40' ){
                 newGame[playerPoints] = currentIndex === 2 ? pointsSequence[currentIndex + 1] : '0';
+            }else if(newGame[`p${player}ps`] == '40' && newGame[`p${otherPlayer}ps`] == 'AV'){
+                newGame['p'+otherPlayer+'ps'] = '40';
             }else{
                 newGame[playerPoints] = currentIndex >= 2 ? '0' : pointsSequence[currentIndex + 1];
                 if(!newGame['p'+otherPlayer+'ps']){
