@@ -9,17 +9,7 @@ const Header = () => {
 
     const { isLoggedIn, logout } = useAuth();
 
-    useEffect(() => {
-        const fetchData = async () => {
-            const response = await getSports();
-            setSports(response);
-        };
-
-        // Llamamos a fetchData() cuando haya cambios en formData
-        fetchData();
-    }, []);
-
-    const [sports, setSports] = useState([]);
+    const sports = [{id: 1, name: 'Padel'},{id:2, name: 'Tenis'},{id:3, name:'Squash'}];
 
     return (
         <header>
@@ -36,7 +26,7 @@ const Header = () => {
                                 {sports.map((sport, index) => (
                                     <NavDropdown key={index} title={sport.name} id={`sport-dropdown-${index}`} drop='end' >
                                         <NavDropdown.Item href={`/sports/${sport.id}`}>Partidos</NavDropdown.Item>
-                                        <NavDropdown.Item href={`/sports/${sport.id}/tournaments`}>Torneos</NavDropdown.Item>
+                                        {/*<NavDropdown.Item href={`/sports/${sport.id}/tournaments`}>Torneos</NavDropdown.Item>*/}
                                         <NavDropdown.Item href={`/sports/${sport.id}/history`}>Historial</NavDropdown.Item>
                                     </NavDropdown>
                                 ))}

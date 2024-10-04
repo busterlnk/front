@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import {Modal, Button, Form} from 'react-bootstrap';
-import {createNewPadelGame} from "../api/request/sportRequest";
+import {createNewGame} from "../api/request/sportRequest";
 import {useNavigate} from "react-router-dom";
 
 const ModalNewPadelGame = ({ showModal, handleCloseModal, id, userData}) => {
@@ -15,7 +15,6 @@ const ModalNewPadelGame = ({ showModal, handleCloseModal, id, userData}) => {
         const formData = new FormData();
 
         formData.append('userid', userData.id)
-        formData.append('sportid', id);
         formData.append('player_one', player1);
         formData.append('player_two', player2);
 
@@ -28,7 +27,7 @@ const ModalNewPadelGame = ({ showModal, handleCloseModal, id, userData}) => {
         formData.append('mode', padelMode);
 
         if(player1 !== null || player2 !== null){
-            await createNewPadelGame(formData).then((response) => {
+            await createNewGame(formData, 'padel').then((response) => {
                 if (response.status == 200){
                     navigate('/sports/'+id+'/game/'+response.data.id);
                 }
@@ -55,9 +54,10 @@ const ModalNewPadelGame = ({ showModal, handleCloseModal, id, userData}) => {
             <Modal.Body>
                 <Form>
                     <Form.Group>
-                        <Form.Label>Tipo de Juego</Form.Label>
+                        <Form.Label className={'mt-4'}>Tipo de Juego</Form.Label>
                         <div>
                             <Form.Check
+                                className={'mt-2'}
                                 inline
                                 type="radio"
                                 label="Individual"
@@ -73,36 +73,55 @@ const ModalNewPadelGame = ({ showModal, handleCloseModal, id, userData}) => {
                                 checked={gameType === 'parejas'}
                                 onChange={handleGameTypeChange}
                             />
-                            <Form.Check
-                                inline
-                                type="radio"
-                                label="Equipos"
-                                value="equipos"
-                                checked={gameType === 'equipos'}
-                                onChange={handleGameTypeChange}
-                            />
                         </div>
                     </Form.Group>
 
-                    <div>
-                        <Form.Group controlId="player1">
-                            <Form.Label>{gameType === 'individual' ? 'Jugador' : 'Pareja'} 1</Form.Label>
-                            <Form.Control
-                                type="text"
-                                placeholder={`Nombre del ${gameType === 'individual' ? 'Jugador' : 'Pareja'} 1`}
-                                value={player1}
-                                onChange={(event) => setPlayer1(event.target.value)}/>
-                        </Form.Group>
-                        <Form.Group controlId="player2">
-                            <Form.Label>Jugador 2</Form.Label>
-                            <Form.Control
-                                type="text"
-                                placeholder={`Nombre del ${gameType === 'individual' ? 'Jugador' : 'Pareja'} 2`}
-                                value={player2}
-                                onChange={(event) => setPlayer2(event.target.value)}/>
-                        </Form.Group>
-                    </div>
-                    <Form.Group>
+                    {gameType === 'individual' && (
+                        <div>
+                            <Form.Group className={'mt-4'} controlId="player1">
+                                <Form.Label>Jugador 1</Form.Label>
+                                <Form.Control
+                                    className={'mt-2'}
+                                    type="text"
+                                    placeholder="Nombre del Jugador 1"
+                                    value={player1}
+                                    onChange={(event) => setPlayer1(event.target.value)}/>
+                            </Form.Group>
+                            <Form.Group className={'mt-4'} controlId="player2">
+                                <Form.Label>Jugador 2</Form.Label>
+                                <Form.Control
+                                    className={'mt-2'}
+                                    type="text"
+                                    placeholder="Nombre del Jugador 2"
+                                    value={player2}
+                                    onChange={(event) => setPlayer2(event.target.value)}/>
+                            </Form.Group>
+                        </div>
+                    )}
+
+                    {gameType === 'parejas' && (
+                        <div>
+                            <Form.Group className={'mt-4'} controlId="partner1">
+                                <Form.Label>Pareja 1</Form.Label>
+                                <Form.Control
+                                    className={'mt-2'}
+                                    type="text"
+                                    placeholder="Nombre de la Pareja 1"
+                                    value={player1}
+                                    onChange={(event) => setPlayer1(event.target.value)}/>
+                            </Form.Group>
+                            <Form.Group className={'mt-4'} controlId="partner2">
+                                <Form.Label>Pareja 2</Form.Label>
+                                <Form.Control
+                                    className={'mt-2'}
+                                    type="text"
+                                    placeholder="Nombre de la Pareja 2"
+                                    value={player2}
+                                    onChange={(event) => setPlayer2(event.target.value)}/>
+                            </Form.Group>
+                        </div>
+                    )}
+                     <Form.Group>
 
                         <Form.Label>Modalidad</Form.Label>
                         <div>

@@ -3,9 +3,11 @@ import {Modal, Button, Form} from 'react-bootstrap';
 import {createNewGame} from "../api/request/sportRequest";
 import {useNavigate} from "react-router-dom";
 
-const ModalNewTenisGame = ({ showModal, handleCloseModal, id, userData}) => {
+const ModalNewSquashGame = ({ showModal, handleCloseModal, id, userData}) => {
     const navigate = useNavigate();
-    const [gameType, setGameType] = useState('individual'); // Estado para almacenar el tipo de juego seleccionado
+    const [gameType, setGameType] = useState('individual');
+    const [games, setGames] = useState(3);
+    const [points, setPoints] = useState(12);
     const [player1, setPlayer1] = useState(null)
     const [player2, setPlayer2] = useState(null)
 
@@ -20,11 +22,11 @@ const ModalNewTenisGame = ({ showModal, handleCloseModal, id, userData}) => {
         if(gameType == 'individual'){
             formData.append('individual', true);
         }else{
-            formData.append('individual', true);
+            formData.append('individual', false);
         }
 
         if(player1 !== null || player2 !== null){
-            await createNewGame(formData, 'tenis').then((response) => {
+            await createNewGame(formData, 'squash').then((response) => {
                 if (response.status == 200){
                     navigate('/sport/'+id+'/game/'+response.data.id);
                 }
@@ -37,6 +39,14 @@ const ModalNewTenisGame = ({ showModal, handleCloseModal, id, userData}) => {
 
     const handleGameTypeChange = (event) => {
         setGameType(event.target.value);
+    }
+    const handleGamesChange = (event) => {
+        console.log(event);
+        setGames(event.target.value);
+    }
+    const handlePointsChange = (event) => {
+        console.log(event.target.value);
+        setPoints(event.target.value);
     }
 
     return (
@@ -114,6 +124,55 @@ const ModalNewTenisGame = ({ showModal, handleCloseModal, id, userData}) => {
                             </Form.Group>
                         </div>
                     )}
+
+
+                    <Form.Group>
+                        <Form.Label className={'mt-4'}>Juegos</Form.Label>
+                        <div>
+                            <Form.Check
+                                className={'mt-2'}
+                                inline
+                                type="radio"
+                                label="3"
+                                value={3}
+                                checked={games === '3'}
+                                onChange={handleGamesChange}
+                            />
+                            <Form.Check
+                                className={'mt-2'}
+                                inline
+                                type="radio"
+                                label="5"
+                                value={5}
+                                checked={games === '5'}
+                                onChange={handleGamesChange}
+                            />
+                        </div>
+                    </Form.Group>
+
+                    <Form.Group>
+                        <Form.Label className={'mt-4'}>Puntos</Form.Label>
+                        <div>
+                            <Form.Check
+                                className={'mt-2'}
+                                inline
+                                type="radio"
+                                label="12"
+                                value={12}
+                                checked={points === '12'}
+                                onChange={handlePointsChange}
+                            />
+                            <Form.Check
+                                className={'mt-2'}
+                                inline
+                                type="radio"
+                                label="15"
+                                value={15}
+                                checked={points === '15'}
+                                onChange={handlePointsChange}
+                            />
+                        </div>
+                    </Form.Group>
                 </Form>
             </Modal.Body>
             <Modal.Footer>
@@ -128,4 +187,4 @@ const ModalNewTenisGame = ({ showModal, handleCloseModal, id, userData}) => {
     );
 };
 
-export default ModalNewTenisGame;
+export default ModalNewSquashGame;

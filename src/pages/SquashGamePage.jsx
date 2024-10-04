@@ -4,10 +4,8 @@ import {getGameScore} from "../api/request/sportRequest";
 import {useParams} from "react-router-dom";
 import '../styles/game.css';
 import {resetGame, sendGameScore, sendGameWinner} from "../api/request/scoreRequest";
-import useMercure from "../hooks/MercureConection";
 
-
-const PadelGamePage = () => {
+const SquashGamePage = () => {
 
     const { gameid } = useParams();
     const [score, setScore] = useState([])
@@ -17,7 +15,7 @@ const PadelGamePage = () => {
     }, []);
 
     const fetchData = async () => {
-        await getGameScore(gameid, 'padel').then((response)=>{
+        await getGameScore(gameid, 'squash').then((response)=>{
             if(response.status === 200){
                 setScore(response.data);
             }
@@ -25,40 +23,19 @@ const PadelGamePage = () => {
 
     };
 
-    const { data, isConnected } = useMercure(`padel_games/${gameid}`);
-
-    useEffect(() => {
-        if (!isConnected) {
-            const interval = setInterval(fetchData, 1000);
-            return () => clearInterval(interval);
-        } else {
-            if(data && data !== score){
-                setScore(data);
-                console.log(data)
-            }
-            // if((data && data.finished)){
-            //
-            // }
-        }
-    }, [isConnected, data]);
-
-
     const handleName = async(e,player) => {
         let newGame = {...score};
         newGame[player] = e.target.value
-        if(!isConnected){
-            setScore(newGame);
-        }
-        await sendGameScore(gameid,newGame,'padel');
+        setScore(newGame);
+        await sendGameScore(gameid,newGame,'squash');
     }
 
     const handleServe = async(player) => {
         let newGame = {...score};
         newGame['saque'] = player;
-        if(!isConnected){
-            setScore(newGame);
-        }
-        await sendGameScore(gameid, newGame,'padel');
+        setScore(newGame);
+        await sendGameScore(gameid,newGame,'squash');
+
     }
 
     const handleGame = async (player, action) => {
@@ -85,14 +62,13 @@ const PadelGamePage = () => {
         }
 
         if(newGame.p1ps !== 0 || newGame.p2ps !== 0){
-            newGame['p1ps'] = '0';
-            newGame['p2ps'] = '0';
+            newGame['p1ps'] = 0;
+            newGame['p2ps'] = 0;
         }
 
-        if(!isConnected){
-            setScore(newGame);
-        }
-        await sendGameScore(gameid, newGame,'padel');
+        setScore(newGame);
+        await sendGameScore(gameid,newGame,'squash');
+
     };
 
     const sendWinner = async(game) => {
@@ -101,7 +77,7 @@ const PadelGamePage = () => {
         firstCouple = game['p12s'] > game['p22s'] ? firstCouple+1 : firstCouple;
         firstCouple = game['p13s'] > game['p23s'] ? firstCouple+1 : firstCouple;
         game['winner'] = firstCouple >= 2 ? game.playerOne : game.playerTwo;
-        sendGameWinner(gameid, game, 'padel');
+        sendGameWinner(gameid, game, 'squash');
     }
 
     const checkSet = (newGame) => {
@@ -110,7 +86,7 @@ const PadelGamePage = () => {
         if((newGame.p11s !== 6 && newGame.p21s !== 6)){
             currentSet = '1s';
         }else if((newGame.p12s !== 6 && newGame.p22s !== 6)){
-            currentSet = '2s';
+            currentSet = '2s'
         }else if((newGame.p13s !== 6 && newGame.p23s !== 6)){
             currentSet = '3s';
         }else{
@@ -163,14 +139,13 @@ const PadelGamePage = () => {
             let currentIndex = pointsSequence.indexOf(newGame[playerPoints]);
             newGame[playerPoints] = currentIndex === 0 ? '0' : pointsSequence[currentIndex - 1]; // Decrementar puntos
         }
-        if(!isConnected){
-            setScore(newGame);
-        }
-        await sendGameScore(gameid, newGame,'padel');
+        setScore(newGame);
+        await sendGameScore(gameid,newGame,'squash');
+
     };
 
     const handleReset = async() => {
-        await resetGame(gameid, 'padel').then((response) => {
+        await resetGame(gameid).then((response) => {
             fetchData();
         });
     }
@@ -198,9 +173,9 @@ const PadelGamePage = () => {
                                                         <th className="parejas">{score.playerOne.toUpperCase()}</th>
                                                     )}
                                                     <th className="saque">{score.saque === 1 ? '🟡' : ''}</th>
-                                                    {score.p11s >= 0 && score.p11s != null  && <th className="set">{score.p11s}</th>}
-                                                    {score.p12s >= 0 && score.p12s != null  && <th className="set">{score.p12s}</th>}
-                                                    {score.p13s >= 0 && score.p13s != null  && <th className="set">{score.p13s}</th>}
+                                                    {score.p11s >= 0  && <th className="set">{score.p11s}</th>}
+                                                    {score.p12s >= 0  && <th className="set">{score.p12s}</th>}
+                                                    {score.p13s >= 0  && <th className="set">{score.p13s}</th>}
                                                     {score.p1ps >= '0' && (score.mode === 'oro' ? <th className="oro">{score.p1ps}</th>
                                                         : score.mode === 'tbr' ? <th className="tbr">{score.p1ps}</th>
                                                         : <th className="puntos">{score.p1ps}</th>)
@@ -211,9 +186,9 @@ const PadelGamePage = () => {
                                                         <th className="parejas">{score.playerTwo.toUpperCase()}</th>
                                                     )}
                                                     <th className="saque">{score.saque === 2 ? '🟡' : ''}</th>
-                                                    {score.p21s >= 0 && score.p21s != null && <th className="set">{score.p21s}</th>}
-                                                    {score.p22s >= 0 && score.p22s != null && <th className="set">{score.p22s}</th>}
-                                                    {score.p23s >= 0 && score.p23s != null && <th className="set">{score.p23s}</th>}
+                                                    {score.p21s >= 0 && <th className="set">{score.p21s}</th>}
+                                                    {score.p22s >= 0 && <th className="set">{score.p22s}</th>}
+                                                    {score.p23s >= 0 && <th className="set">{score.p23s}</th>}
                                                     {score.p2ps >= '0' && (score.mode === 'oro' ? <th className="oro">{score.p2ps}</th>
                                                         : score.mode === 'tbr' ? <th className="tbr">{score.p2ps}</th>
                                                         : <th className="puntos">{score.p2ps}</th>)
@@ -284,4 +259,4 @@ const PadelGamePage = () => {
     );
 };
 
-export default PadelGamePage;
+export default SquashGamePage;

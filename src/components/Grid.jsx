@@ -16,7 +16,6 @@ const Grid = (data, updateData) => {
 
     useEffect(() => {
         setRowData(data.data);
-
         const hasWinner = data.data.some(item => item.winner !== null);
         const newColDefs = [
             { field: "player_one", headerName: "Player One", flex: 1 },

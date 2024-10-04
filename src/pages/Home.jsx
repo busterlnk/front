@@ -5,17 +5,7 @@ import {Link} from "react-router-dom";
 
 const Home = () => {
 
-    const [sports, setSports] = useState([])
-
-    useEffect(() => {
-        const fetchData = async () => {
-            const response = await getSports();
-            setSports(response);
-        };
-
-        // Llamamos a fetchData() cuando haya cambios en formData
-        fetchData();
-    }, []);
+    const sports = [{id: 1, name: 'Padel'},{id:2, name: 'Tenis'}, {id: 3, name: 'Squash'}];
 
 
     return (

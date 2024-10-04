@@ -1,10 +1,11 @@
 import React, {useEffect, useState} from 'react';
 import {Container, Row, Col, Card, Button} from 'react-bootstrap';
-import {getGamesByUser, getSportById} from "../api/request/sportRequest";
+import {getGamesByUser, getPadelGamesByUser, getTenisGamesByUser} from "../api/request/sportRequest";
 import {useParams} from "react-router-dom";
 import ModalNewPadelGame from "../components/ModalNewPadelGame";
 import ModalNewTenisGame from "../components/ModalNewTenisGame";
 import Grid from "../components/Grid";
+import ModalNewSquashGame from "../components/ModalNewSquashGame";
 
 const SportPage = () => {
 
@@ -14,14 +15,11 @@ const SportPage = () => {
     const [sport, setSport] = useState();
     const [showModal, setShowModal] = useState(false);
 
-    const fetchUser = async () => {
-        await getSportById(id).then((responseSport) => {
-            setSport(responseSport);
-        })
-    }
-
     const fetchGames = async () => {
-        const responseGames = await getGamesByUser(userData.id, id);
+        const sport = id == 1 ? 'padel' : id == 2 ? 'tenis' : '';
+        console.log(sport);
+
+        const responseGames =await getGamesByUser(userData.id, sport);
         if(responseGames.status == 200){
             setGames(responseGames.data);
         }else{
@@ -30,11 +28,11 @@ const SportPage = () => {
     };
 
     useEffect(() => {
-        fetchUser()
         fetchGames();
     }, []);
 
-    const ModalComponent = sport?.name === 'Padel' ? ModalNewPadelGame : sport?.name === 'Tenis' ? ModalNewTenisGame : null;
+    const ModalComponent = id === '1' ? ModalNewPadelGame : id === '2' ? ModalNewTenisGame :  id === '3' ? ModalNewSquashGame : null
+    const sportName = id === '1' ? "Padel" : id === '2' ? "Tenis" : id === '3' ? 'Squash' : 'futbol';
 
     const handleOpenModal = () => {
         setShowModal(true);
@@ -47,7 +45,7 @@ const SportPage = () => {
     return (
         <Container>
             <div className='sport-container'>
-                <h1>{sport ? (sport.name) : ""}</h1>
+                <h1>{sportName}</h1>
                 <Button className='create-game-button' onClick={handleOpenModal}>Nuevo Partido</Button>
                 {ModalComponent && (
                     <ModalComponent
