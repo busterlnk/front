@@ -7,7 +7,7 @@ export const getGamesByUser = async(userid, sport) => {
         formData.append('userid', userid)
 
         const response = await axios.post(
-            `http://localhost:8087/api/${sport}_games_user`,
+            `http://localhost/api/${sport}_games_user`,
             formData,
             {
                 headers: {
@@ -27,7 +27,7 @@ export const getGamesByUser = async(userid, sport) => {
 export const deleteGame = async(data) => {
     try{
         const response = await axios.delete(
-            'http://localhost:8087/api/'+data.sport+'_games/'+data.game_id,
+            'http://localhost/api/'+data.sport+'_games/'+data.game_id,
             {
                 headers: {
                     'Content-Type': 'application/ld+json',
@@ -45,7 +45,7 @@ export const createNewGame = async(formData, sport) => {
     try {
 
         const response = await axios.post(
-            `http://localhost:8087/api/${sport}/create_game`,
+            `http://localhost/api/${sport}/create_game`,
             formData,
             {
                 headers: {
@@ -64,7 +64,7 @@ export const createNewGame = async(formData, sport) => {
 export const getGameScore = async(gameid, sport) => {
     try {
         const response = await axios.get(
-            `http://localhost:8087/api/${sport}_games/`+gameid,
+            `http://localhost/api/${sport}_games/`+gameid,
             {
                 headers: {
                     'Content-Type': 'application/ld+json',
