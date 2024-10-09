@@ -30,7 +30,6 @@ const Login = () => {
         login(formData).then(
             (response) => {
                 setLogin(response)
-                console.log(response)
                 fetchUser(response).then((user) => {
                     if(user){
                         navigate('/home');

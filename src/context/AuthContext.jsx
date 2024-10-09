@@ -1,5 +1,6 @@
 // AuthContext.js
 import React, { useState, createContext, useContext } from 'react';
+import {jwtDecode} from 'jwt-decode'; // Asegúrate de instalar esta librería si no lo has hecho: npm install jwt-decode
 
 const AuthContext = createContext(null);
 
@@ -8,10 +9,24 @@ export const useAuth = () => useContext(AuthContext);
 export const AuthProvider = ({ children }) => {
     const [isLoggedIn, setLoggedIn] = useState(null);
 
-    // Cargar el estado inicial de localStorage o cualquier otra lógica de autenticación
+    // Verificar si el token es válido
+    const validateToken = (token) => {
+        try {
+            const decoded = jwtDecode(token);
+            const isExpired = decoded.exp * 1000 < Date.now(); // Verifica si el token ha expirado
+            return !isExpired;
+        } catch (error) {
+            return false;
+        }
+    };
+
     React.useEffect(() => {
-        const userLoggedIn = localStorage.getItem('token') !== null;
-        setLoggedIn(userLoggedIn);
+        const token = localStorage.getItem('token');
+        if (token && validateToken(token)) {
+            setLoggedIn(true);
+        } else {
+            setLoggedIn(false);
+        }
     }, []);
 
     const setLogin = (token) => {
