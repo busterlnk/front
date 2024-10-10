@@ -1,17 +1,16 @@
-import axios from "axios";
-// import jwt from 'jsonwebtoken';
+import api from '../api';
+import jwt from 'jwt-decode';
 
 export const login = async (formData) => {
     try {
-        const response = await axios.post(
-            'http://localhost/api/login',formData,
+        const response = await api.post('/login',formData,
             {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-            }
-        );
-
+            });
+        console.log(response);
+        localStorage.setItem("refreshToken", response.data.refreshToken)
         localStorage.setItem("jwt", response.data.token);
         return response.data.token;
     } catch (error) {
@@ -23,9 +22,7 @@ export const login = async (formData) => {
 export const fetchUser = async (authToken) => {
     try {
 
-        const response = await axios.get(
-            // 'https://localhost/auth',
-            'http://localhost/api/get_user',
+        const response = await api.get('/get_user',
             {
                 headers: {
                     'Content-Type': 'application/json',

@@ -1,4 +1,4 @@
-import axios from 'axios'
+import api from "../api";
 
 export const getGamesByUser = async(userid, sport) => {
     try {
@@ -6,8 +6,7 @@ export const getGamesByUser = async(userid, sport) => {
 
         formData.append('userid', userid)
 
-        const response = await axios.post(
-            `http://localhost/api/${sport}_games_user`,
+        const response = await api.post(`/${sport}_games_user`,
             formData,
             {
                 headers: {
@@ -26,8 +25,7 @@ export const getGamesByUser = async(userid, sport) => {
 
 export const deleteGame = async(data) => {
     try{
-        const response = await axios.delete(
-            'http://localhost/api/'+data.sport+'_games/'+data.game_id,
+        const response = await api.delete(`/${data.sport}_games/${data.game_id}`,
             {
                 headers: {
                     'Content-Type': 'application/ld+json',
@@ -44,8 +42,7 @@ export const deleteGame = async(data) => {
 export const createNewGame = async(formData, sport) => {
     try {
 
-        const response = await axios.post(
-            `http://localhost/api/${sport}/create_game`,
+        const response = await api.post(`/${sport}/create_game`,
             formData,
             {
                 headers: {
@@ -63,8 +60,7 @@ export const createNewGame = async(formData, sport) => {
 
 export const getGameScore = async(gameid, sport) => {
     try {
-        const response = await axios.get(
-            `http://localhost/api/${sport}_games/`+gameid,
+        const response = await api.get(`/${sport}_games/`+gameid,
             {
                 headers: {
                     'Content-Type': 'application/ld+json',

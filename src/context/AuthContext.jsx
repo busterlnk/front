@@ -21,7 +21,7 @@ export const AuthProvider = ({ children }) => {
     };
 
     React.useEffect(() => {
-        const token = localStorage.getItem('token');
+        const token = localStorage.getItem('jwt');
         if (token && validateToken(token)) {
             setLoggedIn(true);
         } else {
@@ -30,12 +30,11 @@ export const AuthProvider = ({ children }) => {
     }, []);
 
     const setLogin = (token) => {
-        localStorage.setItem('token', token);
         setLoggedIn(true);
     };
 
     const logout = () => {
-        localStorage.removeItem('token');
+        ['jwt', 'refreshToken', 'userData'].forEach(item => localStorage.removeItem(item));
         setLoggedIn(false);
     };
 

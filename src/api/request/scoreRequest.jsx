@@ -1,9 +1,8 @@
-import axios from 'axios'
+import api from "../api";
 
 export const sendGameScore = async (gameid, score, sport) => {
     try {
-        const response = await axios.patch(
-            `http://localhost/api/${sport}_games/`+gameid,score,
+        const response = await api.patch(`/${sport}_games/`+gameid,score,
             {
                 headers: {
                     'Content-Type': 'application/merge-patch+json',
@@ -24,8 +23,7 @@ export const sendGameWinner = async (gameid, score, sport) => {
         formData.append('gameid', gameid);
         formData.append('winner', score.winner);
 
-        const response = await axios.post(
-            `http://localhost/api/${sport}/set_winner`,formData,
+        const response = await api.post(`/${sport}/set_winner`,formData,
             {
                 headers: {
                     'Content-Type': 'application/merge-patch+json',
@@ -44,8 +42,7 @@ export const resetGame = async (gameid, sport) => {
     try {
         const formData = new FormData();
         formData.append('gameid', gameid);
-        const response = await axios.post(
-            `http://localhost/api/${sport}/reset_game`,formData,
+        const response = await api.post(`/${sport}/reset_game`,formData,
             {
                 headers: {
                     'Content-Type': 'application/ld+json',
