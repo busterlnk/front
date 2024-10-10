@@ -99,6 +99,14 @@ table tbody{
     }
 }
 
+
+.reset-button{
+    margin-bottom: 20px;
+    button{
+        padding: 15px 40px;
+    }
+}
+
 .sport-container{
     display: flex;
     align-items: center;
@@ -112,4 +120,28 @@ table tbody{
 
 .grid{
     text-align: left;
+}
+
+.hidden-title{
+    display: none;
+}
+
+@media screen and (max-width: 800px) {
+    .card-body{
+        display: flex;
+        justify-content: space-around;
+        .buttons-container{
+            display: block;
+            .set-container{
+                margin-top: 20px;
+                button{
+                    width: 80px;
+                    margin: 0 10px;
+                }
+            }
+            .hidden-title{
+                display: block;
+            }
+        }
+    }
 }

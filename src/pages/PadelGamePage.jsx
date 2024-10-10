@@ -19,7 +19,7 @@ const PadelGamePage = () => {
     const fetchData = async () => {
         await getGameScore(gameid, 'padel').then((response)=>{
             if(response.status === 200){
-                setScore(response.data);
+                setScore(filterNullValues(response.data));
             }
         })
 
@@ -33,14 +33,23 @@ const PadelGamePage = () => {
             return () => clearInterval(interval);
         } else {
             if(data && data !== score){
-                setScore(data);
-                console.log(data)
+                setScore(filterNullValues(data));
             }
             // if((data && data.finished)){
             //
             // }
         }
     }, [isConnected, data]);
+
+    const filterNullValues = (data) => {
+        let filteredData = {};
+        for (let key in data) {
+            if (data[key] !== null && data[key] !== undefined) {
+                filteredData[key] = data[key];
+            }
+        }
+        return filteredData;
+    };
 
 
     const handleName = async(e,player) => {
@@ -235,7 +244,9 @@ const PadelGamePage = () => {
                                             <div className='buttons-container'>
                                                 <div>
                                                     <p>Player 1</p>
-                                                    <input type="text" value={score.playerOne} onChange={(e) => handleName(e,'playerOne')} className='name-player'/>
+                                                    <input type="text" value={score.playerOne}
+                                                           onChange={(e) => handleName(e, 'playerOne')}
+                                                           className='name-player'/>
                                                 </div>
                                                 <div className='set-container'>
                                                     <p>Serve</p>
@@ -255,24 +266,29 @@ const PadelGamePage = () => {
                                             <div className='buttons-container'>
                                                 <div>
                                                     <p>Player 2</p>
-                                                    <input type="text" value={score.playerTwo} onChange={(e) => handleName(e,'playerTwo')} className='name-player'/>
+                                                    <input type="text" value={score.playerTwo}
+                                                           onChange={(e) => handleName(e, 'playerTwo')}
+                                                           className='name-player'/>
                                                 </div>
                                                 <div className='set-container'>
+                                                    <p className='hidden-title'>Serve</p>
                                                     <Button onClick={() => handleServe(2)}>🟡</Button>
                                                 </div>
                                                 <div className='set-container'>
+                                                    <p className='hidden-title'>Games</p>
                                                     <Button onClick={() => handleGame(2, 'decrease')}>-</Button>
                                                     <Button onClick={() => handleGame(2, 'increase')}>+</Button>
                                                 </div>
                                                 <div className='set-container'>
+                                                    <p className='hidden-title'>Points</p>
                                                     <Button onClick={() => handlePoint(2, 'decrease')}>-</Button>
                                                     <Button onClick={() => handlePoint(2, 'increase')}>+</Button>
                                                 </div>
                                             </div>
-                                            <div className='buttons-container'>
-                                                <Button onClick={handleReset}>Reset</Button>
-                                            </div>
                                         </Card.Body>
+                                        <div className='buttons-container reset-button'>
+                                            <Button onClick={handleReset}>Reset</Button>
+                                        </div>
                                     </Card>
                                 </Col>
                             </Row>
