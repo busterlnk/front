@@ -1,14 +1,14 @@
 {
   "files": {
     "main.css": "/static/css/main.2acedc39.css",
-    "main.js": "/static/js/main.facc8d89.js",
+    "main.js": "/static/js/main.31e6f393.js",
     "static/media/sanRemo.ico": "/static/media/sanRemo.3006a73565c99216757d.ico",
     "index.html": "/index.html",
     "main.2acedc39.css.map": "/static/css/main.2acedc39.css.map",
-    "main.facc8d89.js.map": "/static/js/main.facc8d89.js.map"
+    "main.31e6f393.js.map": "/static/js/main.31e6f393.js.map"
   },
   "entrypoints": [
     "static/css/main.2acedc39.css",
-    "static/js/main.facc8d89.js"
+    "static/js/main.31e6f393.js"
   ]
 }
