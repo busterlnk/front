@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const api = axios.create({
-    baseURL: 'http://localhost/api'
+    baseURL: 'http://213.165.93.237/api'
 })
 
 api.interceptors.response.use(response => response, async error => {
