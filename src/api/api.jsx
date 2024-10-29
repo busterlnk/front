@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const api = axios.create({
-    baseURL: 'http://213.165.93.237/api'
+    baseURL: process.env.REACT_APP_API_URL
 })
 
 api.interceptors.response.use(response => response, async error => {

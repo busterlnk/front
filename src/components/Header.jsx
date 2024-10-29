@@ -43,7 +43,10 @@ const Header = () => {
                                 </NavDropdown>
                             </Nav>
                         ) : (
-                            <Nav.Link href="/login">Iniciar sesión</Nav.Link>
+                            <Nav>
+                                <Nav.Link href="/register">Registrarse</Nav.Link>
+                                <Nav.Link href="/login">Iniciar sesión</Nav.Link>
+                            </Nav>
                         )}
                 </Navbar.Collapse>
             </Navbar>

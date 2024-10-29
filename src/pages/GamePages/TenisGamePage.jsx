@@ -1,11 +1,11 @@
 import React, {useEffect, useState} from 'react';
 import {Container, Row, Col, Card, Button} from 'react-bootstrap';
-import {getGameScore} from "../api/request/sportRequest";
+import {getGameScore} from "../../api/request/sportRequest";
 import {useParams} from "react-router-dom";
-import '../styles/game.css';
-import {resetGame, sendGameScore, sendGameWinner} from "../api/request/scoreRequest";
+import '../../styles/game.css';
+import {resetGame, sendGameScore, sendGameWinner} from "../../api/request/scoreRequest";
 
-const SquashGamePage = () => {
+const TenisGamePage = () => {
 
     const { gameid } = useParams();
     const [score, setScore] = useState([])
@@ -15,7 +15,7 @@ const SquashGamePage = () => {
     }, []);
 
     const fetchData = async () => {
-        await getGameScore(gameid, 'squash').then((response)=>{
+        await getGameScore(gameid, 'tenis').then((response)=>{
             if(response.status === 200){
                 setScore(response.data);
             }
@@ -27,14 +27,14 @@ const SquashGamePage = () => {
         let newGame = {...score};
         newGame[player] = e.target.value
         setScore(newGame);
-        await sendGameScore(gameid,newGame,'squash');
+        await sendGameScore(gameid,newGame,'tenis');
     }
 
     const handleServe = async(player) => {
         let newGame = {...score};
         newGame['saque'] = player;
         setScore(newGame);
-        await sendGameScore(gameid,newGame,'squash');
+        await sendGameScore(gameid,newGame,'tenis');
 
     }
 
@@ -67,7 +67,7 @@ const SquashGamePage = () => {
         }
 
         setScore(newGame);
-        await sendGameScore(gameid,newGame,'squash');
+        await sendGameScore(gameid,newGame,'tenis');
 
     };
 
@@ -77,7 +77,7 @@ const SquashGamePage = () => {
         firstCouple = game['p12s'] > game['p22s'] ? firstCouple+1 : firstCouple;
         firstCouple = game['p13s'] > game['p23s'] ? firstCouple+1 : firstCouple;
         game['winner'] = firstCouple >= 2 ? game.playerOne : game.playerTwo;
-        sendGameWinner(gameid, game, 'squash');
+        sendGameWinner(gameid, game, 'tenis');
     }
 
     const checkSet = (newGame) => {
@@ -140,7 +140,7 @@ const SquashGamePage = () => {
             newGame[playerPoints] = currentIndex === 0 ? '0' : pointsSequence[currentIndex - 1]; // Decrementar puntos
         }
         setScore(newGame);
-        await sendGameScore(gameid,newGame,'squash');
+        await sendGameScore(gameid,newGame,'tenis');
 
     };
 
@@ -259,4 +259,4 @@ const SquashGamePage = () => {
     );
 };
 
-export default SquashGamePage;
+export default TenisGamePage;

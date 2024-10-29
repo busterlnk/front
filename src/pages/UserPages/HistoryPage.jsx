@@ -1,8 +1,8 @@
 import React, {useEffect, useState} from 'react';
 import {Container, Row, Col, ListGroup, Card, Button} from 'react-bootstrap';
 import {Link, useParams} from "react-router-dom";
-import Grid from "../components/Grid";
-import {getHistoryGamesByUser} from "../api/request/historyRequest";
+import Grid from "../../components/Grid";
+import {getHistoryGamesByUser} from "../../api/request/historyRequest";
 
 const HistoryPage = () => {
 

@@ -2,16 +2,18 @@ import './App.css';
 import {Route, Routes, BrowserRouter as Router} from 'react-router-dom';
 import {AuthProvider} from "./context/AuthContext";
 import 'bootstrap/dist/css/bootstrap.min.css';
-import Login from './pages/Login';
+import Login from './pages/Common/Login';
 import Header from './components/Header';
-import Home from './pages/Home'
+import Home from './pages/UserPages/Home'
 import SportPage from "./pages/SportPage";
-import PadelGamePage from "./pages/PadelGamePage";
-import HistoryPage from "./pages/HistoryPage";
-import TenisGamePage from "./pages/TenisGamePage";
-import SquashGamePage from "./pages/SquashGamePage";
+import PadelGamePage from "./pages/GamePages/PadelGamePage";
+import HistoryPage from "./pages/UserPages/HistoryPage";
+import TenisGamePage from "./pages/GamePages/TenisGamePage";
+import SquashGamePage from "./pages/GamePages/SquashGamePage";
 import PrivateRoute from "./components/common/PrivateRoute";
 import PublicRoute from "./components/common/PublicRoute";
+import Register from "./pages/Common/Register";
+import NotFound from "./pages/Common/NotFound";
 
 function App() {
   return (
@@ -20,8 +22,11 @@ function App() {
             <Header />
             <Router>
                 <Routes>
+                    <Route path="/404" element={<NotFound />} />
+
                     <Route element={<PublicRoute />}>
                         <Route path="/login" element={<Login />} />
+                        <Route path="/register" element={<Register />} />
                     </Route>
 
                     <Route element={<PrivateRoute />} >

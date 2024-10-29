@@ -2,10 +2,10 @@ import React, {useEffect, useState} from 'react';
 import {Container, Row, Col, Card, Button} from 'react-bootstrap';
 import {getGamesByUser, getPadelGamesByUser, getTenisGamesByUser} from "../api/request/sportRequest";
 import {useParams} from "react-router-dom";
-import ModalNewPadelGame from "../components/ModalNewPadelGame";
-import ModalNewTenisGame from "../components/ModalNewTenisGame";
+import ModalNewPadelGame from "../components/modals/ModalNewPadelGame";
+import ModalNewTenisGame from "../components/modals/ModalNewTenisGame";
 import Grid from "../components/Grid";
-import ModalNewSquashGame from "../components/ModalNewSquashGame";
+import ModalNewSquashGame from "../components/modals/ModalNewSquashGame";
 
 const SportPage = () => {
 

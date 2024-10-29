@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 
 export default function useMercure(topic) {
-    const url = 'http://213.165.93.237/.well-known/mercure';
-    const completeTopic = `http://213.165.93.237/api/${topic}`
+    const url = process.env.REACT_APP_API_MERCURE;
+    const completeTopic = `${process.env.REACT_APP_API_URL}${topic}`
     const [data, setData] = useState(null);
     const [isConnected, setIsConnected] = useState(false);
 

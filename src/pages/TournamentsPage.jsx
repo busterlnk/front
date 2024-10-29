@@ -4,7 +4,7 @@ import {getGamesByUser, getSportById} from "../api/request/sportRequest";
 import {Link, useParams} from "react-router-dom";
 import Grid from "../components/Grid";
 import {gethistoryGameByUser} from "../api/request/historyRequest";
-import ModalNewPadelTournament from "../components/ModalNewPadelTournament";
+import ModalNewPadelTournament from "../components/modals/ModalNewPadelTournament";
 
 const TournamentsPage = () => {
 

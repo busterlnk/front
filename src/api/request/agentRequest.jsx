@@ -9,7 +9,22 @@ export const login = async (formData) => {
                     'Content-Type': 'application/json',
                 },
             });
-        console.log(response);
+        localStorage.setItem("refreshToken", response.data.refreshToken)
+        localStorage.setItem("jwt", response.data.token);
+        return response.data.token;
+    } catch (error) {
+        console.log(error.response);
+    }
+}
+
+export const register = async (formData) => {
+    try {
+        const response = await api.post('/login',formData,
+            {
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
         localStorage.setItem("refreshToken", response.data.refreshToken)
         localStorage.setItem("jwt", response.data.token);
         return response.data.token;

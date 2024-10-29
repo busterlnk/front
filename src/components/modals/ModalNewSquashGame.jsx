@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import {Modal, Button, Form} from 'react-bootstrap';
-import {createNewGame} from "../api/request/sportRequest";
+import {createNewGame} from "../../api/request/sportRequest";
 import {useNavigate} from "react-router-dom";
 
 const ModalNewSquashGame = ({ showModal, handleCloseModal, id, userData}) => {

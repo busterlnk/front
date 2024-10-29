@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import { Container, Row, Col, ListGroup, Card } from 'react-bootstrap';
-import {getSports} from "../api/request/sportRequest";
+import {getSports} from "../../api/request/sportRequest";
 import {Link} from "react-router-dom";
 
 const Home = () => {
