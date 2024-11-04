@@ -17,12 +17,11 @@ const PadelGamePage = () => {
     }, []);
 
     const fetchData = async () => {
-        await getGameScore(gameid, 'padel').then((response)=>{
-            if(response.status === 200){
+        await getGameScore(gameid, 'padel').then((response) => {
+            if (response.status === 200) {
                 setScore(filterNullValues(response.data));
             }
-        })
-
+        });
     };
 
     const { data, isConnected } = useMercure(`padel_games/${gameid}`);
@@ -32,12 +31,9 @@ const PadelGamePage = () => {
             const interval = setInterval(fetchData, 1000);
             return () => clearInterval(interval);
         } else {
-            if(data && data !== score){
+            if (data && data !== score) {
                 setScore(filterNullValues(data));
             }
-            // if((data && data.finished)){
-            //
-            // }
         }
     }, [isConnected, data]);
 
@@ -51,138 +47,130 @@ const PadelGamePage = () => {
         return filteredData;
     };
 
-
-    const handleName = async(e,player) => {
-        let newGame = {...score};
-        newGame[player] = e.target.value
-        if(!isConnected){
+    const handleName = async (e, player) => {
+        let newGame = { ...score };
+        newGame[player] = e.target.value;
+        if (!isConnected) {
             setScore(newGame);
         }
-        await sendGameScore(gameid,newGame,'padel');
-    }
+        await sendGameScore(gameid, newGame, 'padel');
+    };
 
-    const handleServe = async(player) => {
-        let newGame = {...score};
+    const handleServe = async (player) => {
+        let newGame = { ...score };
         newGame['saque'] = player;
-        if(!isConnected){
+        if (!isConnected) {
             setScore(newGame);
         }
-        await sendGameScore(gameid, newGame,'padel');
-    }
+        await sendGameScore(gameid, newGame, 'padel');
+    };
 
     const handleGame = async (player, action) => {
-        let newGame = {...score};
-        const otherPlayer = player === 1 ? 2: 1;
-
+        let newGame = { ...score };
+        const otherPlayer = player === 1 ? 2 : 1;
         const currentSet = checkSet(newGame);
 
         if (action === 'increase') {
-            if(!newGame['p'+otherPlayer+currentSet]){
-                newGame['p'+otherPlayer+currentSet] = 0
-            }
-                // Incrementar juegos y verificar si el set termina
-            if(newGame['p'+player+currentSet]){
-                newGame['p'+player+currentSet]++;
-            }else{
-                newGame['p'+player+currentSet] = 1;
-                if(!newGame['p'+otherPlayer+currentSet]){
-                    newGame['p'+otherPlayer+currentSet] = 0;
-                }
-            }
-        } else if (action === 'decrease' && newGame['p'+player+currentSet] > 0) {
-            newGame['p'+player+currentSet]--
+            newGame[`p${player}${currentSet}`] = (newGame[`p${player}${currentSet}`] || 0) + 1;
+            newGame[`p${otherPlayer}${currentSet}`] = newGame[`p${otherPlayer}${currentSet}`] || 0;
+        } else if (action === 'decrease' && newGame[`p${player}${currentSet}`] > 0) {
+            newGame[`p${player}${currentSet}`]--;
         }
 
-        if(newGame.p1ps !== 0 || newGame.p2ps !== 0){
-            newGame['p1ps'] = '0';
-            newGame['p2ps'] = '0';
-        }
+        newGame.p1ps = '0';
+        newGame.p2ps = '0';
 
-        if(!isConnected){
-            setScore(newGame);
-        }
-        await sendGameScore(gameid, newGame,'padel');
+        if (!isConnected) setScore(newGame);
+        await sendGameScore(gameid, newGame, 'padel');
     };
 
-    const sendWinner = async(game) => {
+    const sendWinner = async (game) => {
         let firstCouple = 0;
-        firstCouple = game['p11s'] > game['p21s'] ? firstCouple+1 : firstCouple;
-        firstCouple = game['p12s'] > game['p22s'] ? firstCouple+1 : firstCouple;
-        firstCouple = game['p13s'] > game['p23s'] ? firstCouple+1 : firstCouple;
+        firstCouple = game['p11s'] > game['p21s'] ? firstCouple + 1 : firstCouple;
+        firstCouple = game['p12s'] > game['p22s'] ? firstCouple + 1 : firstCouple;
+        firstCouple = game['p13s'] > game['p23s'] ? firstCouple + 1 : firstCouple;
         game['winner'] = firstCouple >= 2 ? game.playerOne : game.playerTwo;
-        sendGameWinner(gameid, game, 'padel');
-    }
+        await sendGameWinner(gameid, game, 'padel');
+    };
 
     const checkSet = (newGame) => {
-        let currentSet = 0
+        let currentSet = '1s';
 
-        if((newGame.p11s !== 6 && newGame.p21s !== 6)){
-            currentSet = '1s';
-        }else if((newGame.p12s !== 6 && newGame.p22s !== 6)){
+        if ((newGame.p11s >= 6 || newGame.p21s >= 6) && (Math.abs(newGame.p11s - newGame.p21s) === 2) || (newGame.p11s === 7 || newGame.p21s === 7)) {
             currentSet = '2s';
-        }else if((newGame.p13s !== 6 && newGame.p23s !== 6)){
+        }
+        if ((newGame.p12s >= 6 || newGame.p22s >= 6) && (Math.abs(newGame.p12s - newGame.p22s) === 2) || (newGame.p12s === 7 || newGame.p22s === 7)) {
             currentSet = '3s';
-        }else{
+        }
+        if ((newGame.p13s >= 6 || newGame.p23s >= 6) && (Math.abs(newGame.p13s - newGame.p23s) === 2) || (newGame.p13s === 7 || newGame.p23s === 7)) {
             currentSet = 'end';
             sendWinner(newGame);
         }
+
         return currentSet;
-    }
+    };
 
     const handlePoint = async (player, action) => {
-        let newGame = {...score};
-        const otherPlayer = player === 1 ? 2: 1;
-        const pointsSequence = ['15', '30', '40', 'AV'];
-        const playerPoints = player === 1 ? 'p1ps' : 'p2ps';
-
+        let newGame = { ...score };
+        const otherPlayer = player === 1 ? 2 : 1;
+        const pointsSequence = ['0', '15', '30', '40', 'AV'];
+        const playerPoints = `p${player}ps`;
+        const otherPlayerPoints = `p${otherPlayer}ps`;
         const currentSet = checkSet(newGame);
-        if(currentSet === 'end'){
-            return;
-        }
+
+        if (currentSet === 'end') return;
+
+        const isTieBreak = newGame[`p${player}${currentSet}`] === 6 && newGame[`p${otherPlayer}${currentSet}`] === 6;
 
         if (action === 'increase') {
-            let currentIndex = pointsSequence.indexOf(newGame[playerPoints]);
+            if (isTieBreak) {
+                // Incrementa puntos de 1 en 1 en el tie-break
+                newGame[playerPoints] = ((parseInt(newGame[playerPoints]) || 0) + 1).toString();
 
-            if(newGame[`p${player}ps`] == '40' && newGame[`p${otherPlayer}ps`] == '40' ){
-                newGame[playerPoints] = currentIndex === 2 ? pointsSequence[currentIndex + 1] : '0';
-            }else if(newGame[`p${player}ps`] == '40' && newGame[`p${otherPlayer}ps`] == 'AV'){
-                newGame['p'+otherPlayer+'ps'] = '40';
-            }else{
-                newGame[playerPoints] = currentIndex >= 2 ? '0' : pointsSequence[currentIndex + 1];
-                if(!newGame['p'+otherPlayer+'ps']){
-                    newGame['p'+otherPlayer+'ps'] = '0'
-                }else{
-                    newGame['p'+otherPlayer+'ps'] = currentIndex >= 2 ? '0' : newGame['p'+otherPlayer+'ps'];
+                // Verifica si un jugador ha ganado el tie-break (7 puntos y ventaja de 2)
+                const playerScore = parseInt(newGame[playerPoints]);
+                const otherScore = parseInt(newGame[otherPlayerPoints]);
+
+                if (playerScore >= 7 && playerScore - otherScore >= 2) {
+                    // El jugador gana el set en el tie-break
+                    newGame[`p${player}${currentSet}`] = (newGame[`p${player}${currentSet}`] || 0) + 1;
+                    newGame[playerPoints] = '0';
+                    newGame[otherPlayerPoints] = '0';
                 }
-
-                if (currentIndex >= 2) {
-                    // Incrementar juegos y verificar si el set termina
-                    if(newGame['p'+player+currentSet]){
-                        newGame['p'+player+currentSet]++;
-                    }else{
-                        newGame['p'+player+currentSet] = 1;
-                        if(!newGame['p'+otherPlayer+currentSet]){
-                            newGame['p'+otherPlayer+currentSet] = 0;
-                        }
+            } else if (score.mode === 'oro' && newGame[playerPoints] === '40' && newGame[otherPlayerPoints] === '40') {
+                newGame[`p${player}${currentSet}`] = (newGame[`p${player}${currentSet}`] || 0) + 1;
+                newGame[playerPoints] = '0';
+                newGame[otherPlayerPoints] = '0';
+            } else {
+                let currentIndex = pointsSequence.indexOf(newGame[playerPoints]);
+                if (newGame[playerPoints] === '40' && newGame[otherPlayerPoints] === '40') {
+                    newGame[playerPoints] = 'AV';
+                } else if (newGame[playerPoints] === '40' && newGame[otherPlayerPoints] === 'AV') {
+                    newGame[otherPlayerPoints] = '40';
+                } else {
+                    if (currentIndex >= 3) {
+                        newGame[`p${player}${currentSet}`] = (newGame[`p${player}${currentSet}`] || 0) + 1;
+                        newGame[playerPoints] = '0';
+                        newGame[otherPlayerPoints] = '0';
+                    } else {
+                        newGame[playerPoints] = pointsSequence[currentIndex + 1];
                     }
                 }
             }
-
-        } else if (action === 'decrease' && newGame[playerPoints] > 0) {
+        } else if (action === 'decrease' && newGame[playerPoints] !== '0') {
             let currentIndex = pointsSequence.indexOf(newGame[playerPoints]);
-            newGame[playerPoints] = currentIndex === 0 ? '0' : pointsSequence[currentIndex - 1]; // Decrementar puntos
+            newGame[playerPoints] = currentIndex === 0 ? '0' : pointsSequence[currentIndex - 1];
         }
-        if(!isConnected){
-            setScore(newGame);
-        }
-        await sendGameScore(gameid, newGame,'padel');
+
+        if (!isConnected) setScore(newGame);
+        await sendGameScore(gameid, newGame, 'padel');
     };
 
-    const handleReset = async() => {
-        await resetGame(gameid, 'padel').then((response) => {
+    const handleReset = async () => {
+        await resetGame(gameid, 'padel').then(() => {
             fetchData();
         });
-    }
+    };
 
 
     return (

@@ -17,7 +17,6 @@ const SportPage = () => {
 
     const fetchGames = async () => {
         const sport = id == 1 ? 'padel' : id == 2 ? 'tenis' : '';
-        console.log(sport);
 
         const responseGames =await getGamesByUser(userData.id, sport);
         if(responseGames.status == 200){
