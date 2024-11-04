@@ -21,7 +21,7 @@ const Header = () => {
                 <Navbar.Collapse id="basic-navbar-nav" className='navbar-container'>
                     <Nav className="mr-auto">
                         <Nav.Link href="/home">Home</Nav.Link>
-                        {sports &&
+                        {sports && isLoggedIn &&
                             <NavDropdown title="Deportes" id="sports-dropdown">
                                 {sports.map((sport, index) => (
                                     <NavDropdown key={index} title={sport.name} id={`sport-dropdown-${index}`} drop='end' >

@@ -30,7 +30,7 @@ const Register = () => {
 
         // Verificar si las contraseñas coinciden
         if (formData.password !== formData.confirmPassword) {
-            setError("Las contraseñas no coinciden.");
+            setError("Las contrase?as no coinciden.");
             return;
         }
 
@@ -40,8 +40,8 @@ const Register = () => {
         try {
             const response = await register({
                 username: formData.username,
-                plainPassword: formData.password,
-                email: formData.email
+                email: formData.email,
+                plainPassword: formData.password
             });
 
             setRegister(response);

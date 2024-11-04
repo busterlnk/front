@@ -26,13 +26,16 @@ const Login = () => {
         setError(null); // Clear any previous errors
 
         try {
-            const response = await login(formData);
-            setLogin(response);
-            const user = await fetchUser(response);
-            if (user) navigate('/home');
+            await login(formData).then(async(response) => {
+                if(response.status === 200){
+                    setLogin(response.data.token);
+                    const user = await fetchUser();
+                    if (user) navigate('/home');
+                }
+            })
+
         } catch (err) {
             setError("Error al iniciar sesión. Verifica tus credenciales.");
-            console.error(err);
         }
     };
 

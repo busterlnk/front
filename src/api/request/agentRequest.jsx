@@ -11,7 +11,7 @@ export const login = async (formData) => {
             });
         localStorage.setItem("refreshToken", response.data.refreshToken)
         localStorage.setItem("jwt", response.data.token);
-        return response.data.token;
+        return response;
     } catch (error) {
         console.log(error.response);
     }
@@ -19,10 +19,10 @@ export const login = async (formData) => {
 
 export const register = async (formData) => {
     try {
-        const response = await api.post('/login',formData,
+        const response = await api.post('/users',formData,
             {
                 headers: {
-                    'Content-Type': 'application/json',
+                    'Content-Type': 'application/ld+json',
                 },
             });
         localStorage.setItem("refreshToken", response.data.refreshToken)
@@ -34,7 +34,7 @@ export const register = async (formData) => {
 }
 
 
-export const fetchUser = async (authToken) => {
+export const fetchUser = async () => {
     try {
 
         const response = await api.get('/get_user',
