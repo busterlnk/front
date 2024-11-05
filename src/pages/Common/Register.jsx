@@ -28,29 +28,31 @@ const Register = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        // Verificar si las contraseñas coinciden
+        // Verificar si las contrase?s coinciden
         if (formData.password !== formData.confirmPassword) {
-            setError("Las contrase?as no coinciden.");
+            setError("Las contraseÃ±as no coinciden.");
             return;
         }
 
-        // Limpiar el error si las contraseñas coinciden
+        // Limpiar el error si las contrase?s coinciden
         setError('');
 
         try {
-            const response = await register({
+            await register({
                 username: formData.username,
                 email: formData.email,
                 plainPassword: formData.password
+            }).then(async (response) => {
+                setRegister(response);
+                await fetchUser(response).then((user) => {
+                    if (user) {
+                        navigate('/home');
+                    }
+                });
             });
 
-            setRegister(response);
-            const user = await fetchUser(response);
-            if (user) {
-                navigate('/home');
-            }
         } catch (error) {
-            setError("Hubo un error en el registro. Inténtalo nuevamente.");
+            setError("Hubo un error en el registro. IntÃ©ntalo nuevamente.");
             console.error(error);
         }
     }
@@ -82,7 +84,7 @@ const Register = () => {
                             type="email"
                             className="form-control"
                             name="email"
-                            placeholder="Correo Electrónico"
+                            placeholder="Correo ElectrÃ³nico"
                             value={formData.email}
                             onChange={handleChange}
                             required
@@ -93,7 +95,7 @@ const Register = () => {
                             type="password"
                             className="form-control"
                             name="password"
-                            placeholder="Contraseña"
+                            placeholder="ContraseÃ±a"
                             value={formData.password}
                             onChange={handleChange}
                             required
@@ -104,7 +106,7 @@ const Register = () => {
                             type="password"
                             className="form-control"
                             name="confirmPassword"
-                            placeholder="Confirmar Contraseña"
+                            placeholder="Confirmar ContraseÃ±a"
                             value={formData.confirmPassword}
                             onChange={handleChange}
                             required
